@@ -1,9 +1,14 @@
-#include "catch.hpp"
+#include <fstream>
 
+#include "catch.hpp"
 #include "json.hpp"
 
-TEST_CASE("dev") {
+using json = nlohmann::json;
 
-    REQUIRE(true);
+TEST_CASE("reading base configuration file") {
+
+	std::ifstream f("config.json");
+	json j;
+	CHECK_NOTHROW(j << f);
 }
 
