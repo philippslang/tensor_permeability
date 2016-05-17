@@ -15,13 +15,21 @@ INCLUDE_DIRECTORIES(${INCLUDE_DIRECTORIES} .
 										../../src)
 
 SET (tensor_permeability_SRC 
-		../../src/setting.cpp
-		../../src/setting_test.cpp
+		../../src/settings.cpp
+		../../src/settings_test.cpp
+		../../src/configurator.cpp
+		../../src/configurator_factory.cpp
 		../../test/main.cpp
-		../../test/dev.cpp)
+		../../test/dev.cpp
+		../../configurator/src/matrix_configurator_factory.cpp
+		../../configurator/src/uniform_matrix_configurator.cpp)
 
 SET (tensor_permeability_HEADER
-		../../src/setting.h)
+		../../src/settings.h
+		../../src/configurator.h
+		../../src/configurator_factory.h
+		../../configurator/src/matrix_configurator_factory.h
+		../../configurator/src/uniform_matrix_configurator.h)
 
 LINK_DIRECTORIES(${BOOST_LIBRARYDIR})
 ADD_EXECUTABLE(tensor_permeability ${tensor_permeability_SRC} ${tensor_permeability_HEADER})

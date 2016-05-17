@@ -1,14 +1,14 @@
 #include <fstream>
 
 #include "catch.hpp"
-#include "json.hpp"
+#include "settings.h"
 
-using json = nlohmann::json;
+using namespace csmp::tperm;
 
 TEST_CASE("reading base configuration file") {
 
 	std::ifstream f("config.json");
-	json j;
+	Settings j;
 	CHECK_NOTHROW(j << f);
 }
 
