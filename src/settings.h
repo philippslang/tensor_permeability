@@ -11,22 +11,8 @@ namespace csmp {
 		The class currently encapsulate nlohmann::json. It is the interface to user-provided settings, 
 		which, for now, are JSON based and somewhat tightly coupled.
 		*/
-		class Setting
+		class Settings : public nlohmann::json
 		{
-		public:
-			Setting();
-			
-			void initialize(const nlohmann::json& j);
-
-			bool empty() const;
-
-			template<typename T>
-			T value() const {
-				return j_.begin().value();
-			}
-
-		private:
-			nlohmann::json j_;			
 		};
 
 	} // !tperm
