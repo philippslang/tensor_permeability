@@ -3,13 +3,13 @@
 namespace csmp {
 	namespace tperm {
 
-		UniformMatrixConfigurator::UniformMatrixConfigurator(Model& model)
-			: Configurator(model)
+		UniformMatrixConfigurator::UniformMatrixConfigurator(const csmp::TensorVariable<3>& perm)
+			: Configurator(), perm_(perm)
 		{
 		}
 
 
-		bool UniformMatrixConfigurator::configure() const
+		bool UniformMatrixConfigurator::configure(Model& model) const
 		{
 			return true;
 		}

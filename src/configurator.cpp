@@ -3,8 +3,7 @@
 namespace csmp {
 	namespace tperm {
 
-		Configurator::Configurator(Model& model)
-			: model_(model)
+		Configurator::Configurator()
 		{
 		}
 

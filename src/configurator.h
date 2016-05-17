@@ -15,16 +15,10 @@ namespace csmp {
 		public:
 			typedef csmp::Model<3> Model;
 
-			Configurator(Model&);
+			Configurator();
 			virtual ~Configurator();
 
-			virtual bool configure() const = 0;
-
-		protected:
-			Model& model() const {return model_;}
-
-		private:
-			Model& model_;
+			virtual bool configure(Model&) const = 0;
 		};
 
 	} // !tperm

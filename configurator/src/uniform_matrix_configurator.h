@@ -2,9 +2,9 @@
 #define TP_UNIFMATRIXCONFIG_H
 
 #include "configurator.h"
+#include "TensorVariable.h"
 
 namespace csmp {
-
 
 	namespace tperm {
 
@@ -12,11 +12,12 @@ namespace csmp {
 		class UniformMatrixConfigurator : public Configurator
 		{
 		public:
-			typedef csmp::Model<3> Model;
+			UniformMatrixConfigurator(const csmp::TensorVariable<3>&);
 
-			UniformMatrixConfigurator(Model&);
+			virtual bool configure(Model&) const;
 
-			virtual bool configure() const;
+		private:
+			csmp::TensorVariable<3> perm_;
 		};
 
 	} // !tperm

@@ -12,7 +12,7 @@ namespace csmp {
 			MatrixConfiguratorFactory();
 			virtual ~MatrixConfiguratorFactory();
 
-			virtual std::unique_ptr<Configurator> configurator(const Settings&, Configurator::Model&) const;
+			virtual std::unique_ptr<Configurator> configurator(const Settings&) const;
 		};
 
 	} // !tperm

@@ -1,12 +1,17 @@
 #include "matrix_configurator_factory.h"
 #include "uniform_matrix_configurator.h"
+#include "settings.h"
+#include <string>
+
+using namespace std;
 
 namespace csmp {
 	namespace tperm {
 
-		std::unique_ptr<Configurator> MatrixConfiguratorFactory::configurator(const Settings& settings, Configurator::Model& model) const
+		std::unique_ptr<Configurator> MatrixConfiguratorFactory::configurator(const Settings& s) const
 		{
 			std::unique_ptr<Configurator> pConf(nullptr);
+			const auto c = s["matrix configuration"].get<string>();
 			return pConf;
 		}
 
