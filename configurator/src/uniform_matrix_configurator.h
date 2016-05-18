@@ -4,6 +4,7 @@
 #include "configurator.h"
 #include "TensorVariable.h"
 
+
 namespace csmp {
 
 	namespace tperm {

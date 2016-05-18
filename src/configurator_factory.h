@@ -12,6 +12,7 @@ namespace csmp {
 		/// ABC for tperm::Configurator factory pattern.
 		class ConfiguratorFactory
 		{
+		public:
 			ConfiguratorFactory();
 			virtual ~ConfiguratorFactory();
 

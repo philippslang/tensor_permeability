@@ -1,4 +1,5 @@
 #include "uniform_matrix_configurator.h"
+#include "Model.h"
 
 namespace csmp {
 	namespace tperm {

@@ -7,8 +7,9 @@ namespace csmp {
 	namespace tperm {
 
 		/// Makes matrix configurators.
-		class MatrixConfiguratorFactory
+		class MatrixConfiguratorFactory : public ConfiguratorFactory
 		{
+		public:
 			MatrixConfiguratorFactory();
 			virtual ~MatrixConfiguratorFactory();
 
