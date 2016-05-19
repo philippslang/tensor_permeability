@@ -6,7 +6,7 @@
 namespace csmp {
 	namespace tperm {
 
-		/// Makes matrix configurators.
+		/// Makes matrix configurators from settings.
 		class MatrixConfiguratorFactory : public ConfiguratorFactory
 		{
 		public:

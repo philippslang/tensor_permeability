@@ -19,6 +19,11 @@ namespace csmp {
 			virtual std::unique_ptr<Configurator> configurator(const Settings&) const = 0;
 		};
 
+		/** \class Settings
+
+		Primarily, ConfiguratorFactory instances decouples configurators from application settings.
+		*/
+
 	} // !tperm
 } // !csmp
 
