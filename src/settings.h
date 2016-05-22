@@ -6,14 +6,19 @@
 namespace csmp {
 	namespace tperm {
 
-		/// Container for solver/configurator control settings.
-		class Settings : public nlohmann::json
+		/// JSON Container for application settings
+		class Settings
 		{
+		public:
+			Settings();
+			explicit Settings(nlohmann::json);
+
+			nlohmann::json json;
 		};
 
 		/** \class Settings
 
-		The class currently inherits nlohmann::json. It is the interface to user-provided settings,
+		The class currently subclasses nlohmann::json. It is the interface to user-provided settings,
 		which, for now, are JSON based and somewhat tightly coupled.
 		*/
 

@@ -9,7 +9,7 @@ namespace csmp {
 
 	namespace tperm {
 
-		/// ABC for model configuration. Changes the state of a csmp::Model.
+		/// ABC for model configuration, changes the state of a csmp::Model
 		class Configurator 
 		{
 		public:

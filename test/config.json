@@ -1,9 +1,16 @@
 {
-	"configurator":
+	"model":
 	{
+		"file name": "debug"
+	}
+	"configuration":
+	{
+		"matrix":
+		{
+			"configuration": "uniform"
+		}
 	},
 	"solver":
 	{
-	},
-	"matrix configuration": "uniform"
+	}
 }

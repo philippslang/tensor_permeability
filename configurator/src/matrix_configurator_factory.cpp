@@ -22,7 +22,7 @@ namespace csmp {
 		std::unique_ptr<Configurator> MatrixConfiguratorFactory::configurator(const Settings& s) const
 		{
 			std::unique_ptr<Configurator> pConf(nullptr);
-			const string c = s["matrix configuration"].get<string>();
+			const string c = s.json["matrix configuration"].get<string>();
 
 			if (c == string("uniform matrix")) {
 				const TensorVariable<3> mperm;

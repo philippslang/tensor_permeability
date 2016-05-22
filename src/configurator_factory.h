@@ -9,7 +9,7 @@ namespace csmp {
 		class Settings;
 		class Configurator;
 
-		/// ABC for tperm::Configurator factory pattern.
+		/// ABC for tperm::Configurator factory pattern
 		class ConfiguratorFactory
 		{
 		public:
@@ -19,9 +19,9 @@ namespace csmp {
 			virtual std::unique_ptr<Configurator> configurator(const Settings&) const = 0;
 		};
 
-		/** \class Settings
+		/** \class ConfiguratorFactory
 
-		Primarily, ConfiguratorFactory instances decouples configurators from application settings.
+		Primarily, ConfiguratorFactory instances decouples tperm::Configurator from application tperm::Settings.
 		*/
 
 	} // !tperm

@@ -19,6 +19,7 @@ SET (tensor_permeability_SRC
 		../../src/settings_test.cpp
 		../../src/configurator.cpp
 		../../src/configurator_factory.cpp
+		../../src/model_io.cpp
 		../../test/main.cpp
 		../../test/dev.cpp
 		../../configurator/src/matrix_configurator_factory.cpp
@@ -28,6 +29,7 @@ SET (tensor_permeability_HEADER
 		../../src/settings.h
 		../../src/configurator.h
 		../../src/configurator_factory.h
+		../../src/model_io.h
 		../../configurator/src/matrix_configurator_factory.h
 		../../configurator/src/uniform_matrix_configurator.h)
 
