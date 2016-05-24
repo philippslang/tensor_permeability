@@ -11,11 +11,11 @@ namespace csmp {
 		// forwards
 		class Settings;
 
-		void write_vfile(const char*);
+		bool write_vfile(const char* fname, const csmp::PropertyDatabase<3>&);
 
 		std::unique_ptr<csmp::Model<3>> load_model(const Settings&);
 
-		std::unique_ptr<csmp::PropertyDatabase<3>> property_database(bool tensorial_conductivity);
+		std::unique_ptr<csmp::PropertyDatabase<3>> property_database(bool two_d);
 
 	} // !tperm
 } // !csmp

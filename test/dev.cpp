@@ -24,7 +24,8 @@ TEST_CASE("uniform matrix configuration") {
 	Settings s;
 	s.json = R"({
 				 "model": {
-                     "file name": "debug"
+                     "file name": "debug",
+					 "format": "none"
                  },
 				 "configuration": {
 				     "matrix":{
@@ -33,8 +34,9 @@ TEST_CASE("uniform matrix configuration") {
 				 }
 				})"_json;
 	Settings ms(s.json["model"]);
-	//Settings ms;
-	//ms.json = s.json["model"];
-	auto model = load_model(ms);
+	std::unique_ptr<csmp::Model<3>> nomodel = load_model(ms);
+	REQUIRE(nomodel == nullptr);
+	ms.json["format"] = "icem";
+    std::unique_ptr<csmp::Model<3>> model = load_model(ms);
 }
 
