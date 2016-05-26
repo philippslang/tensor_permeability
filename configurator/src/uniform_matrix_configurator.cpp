@@ -1,4 +1,6 @@
 #include "uniform_matrix_configurator.h"
+#include "bpreds.h"
+
 #include "Model.h"
 
 namespace csmp {
@@ -17,14 +19,16 @@ namespace csmp {
 		}
 
 
+		/**
+		Assigns permeability to all equi-dimensional elements in `Model`
+		*/
 		bool UniformMatrixConfigurator::configure(Model& model) const
 		{
+			auto melmts = model.ElementsFrom(MatrixElement<3>(false));
 			const char* vname = "permeability";
-			Region<3>& mref = model.Region("MATRIX");
-			if (model.Database().Type(vname) == SCALAR)
-				mref.InputPropertyValue(vname, makeScalar(PLAIN, perm_.Trace()/3.0));
-			else 
-				mref.InputPropertyValue("permeability", perm_);
+			Index pKey(model.Database().StorageKey(vname));
+			for (const auto& it: melmts)
+				it->Store(pKey, perm_);			
 			return true;
 		}
 

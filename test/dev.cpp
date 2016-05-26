@@ -4,9 +4,14 @@
 #include "settings.h"
 #include "json.hpp"
 #include "model_io.h"
+#include "matrix_configurator_factory.h"
+#include "fracture_configurator_factory.h"
+#include "configurator.h"
 
 #include "Model.h"
+#include "TensorVariable.h"
 
+using namespace csmp;
 using namespace csmp::tperm;
 using namespace std;
 
@@ -20,23 +25,80 @@ TEST_CASE("reading base configuration file") {
 }
 
 
-TEST_CASE("uniform matrix configuration") {
+TEST_CASE("model factory nullptr") {
 	Settings s;
 	s.json = R"({
 				 "model": {
                      "file name": "debug",
-					 "format": "none"
+					 "format": "icem"
+                 }
+				})"_json;
+	Settings ms(s.json["model"]);
+	ms.json["format"] = "none";
+	// nullptr expected because of "format": "none"
+	auto nomodel = load_model(ms);
+	REQUIRE(nomodel == nullptr);
+}
+
+
+TEST_CASE("tensor extraction") {
+	Settings s;
+	s.json = R"({
+				 "configuration": {
+                     "tensor": 1.0,
+					 "tensor diagonal": [1.0, 2.0, 3.0],
+				     "tensor full": [1.0, 0.1, 0.1, 0.2, 2.0, 0.2, 0.3, 0.3, 3.0]
+                 }
+				})"_json;
+	// Spherical tensor
+	Settings cs(s.json["configuration"]);
+	REQUIRE(tensor("tensor", cs) == TensorVariable<3>(PLAIN, 1.0, 0., 0., 0., 1.0, 0., 0., 0., 1.0));
+	// Diagonal tensor
+	cs.json["tensor"] = {1.0, 2.0, 3.0};
+	TensorVariable<3> td(PLAIN, 1.0, 0., 0., 0., 2.0, 0., 0., 0., 3.0);
+	REQUIRE(tensor("tensor", cs) == td);
+	REQUIRE(tensor("tensor diagonal", cs) == td);
+	// Full tensor
+	cs.json["tensor"] = { 1.0, 0.1, 0.1, 0.2, 2.0, 0.2, 0.3, 0.3, 3.0 };
+	TensorVariable<3> tf(PLAIN, 1.0, 0.1, 0.1, 0.2, 2.0, 0.2, 0.3, 0.3, 3.0);
+    REQUIRE(tensor("tensor full", cs) == tf);
+	REQUIRE(tensor("tensor", cs) == tf);
+}
+
+
+TEST_CASE("flow tdd") {
+	// generate settings
+	Settings s;
+	s.json = R"({
+				 "model": {
+                     "file name": "debug",
+					 "format": "icem"
                  },
 				 "configuration": {
 				     "matrix":{
-				         "configuration": "uniform"
+				         "configuration": "uniform",
+						 "permeability": 1.0E-15
+					 },
+					 "fractures":{
+						 "configuration": "uniform",
+						 "mechanical aperture": 0.01, 
+						 "hydraulic aperture": 0.001
 					 }
 				 }
 				})"_json;
-	Settings ms(s.json["model"]);
-	std::unique_ptr<csmp::Model<3>> nomodel = load_model(ms);
-	REQUIRE(nomodel == nullptr);
-	ms.json["format"] = "icem";
-    std::unique_ptr<csmp::Model<3>> model = load_model(ms);
+	// get matrix configurator
+	Settings cs(s.json["configuration"]["matrix"]);
+	MatrixConfiguratorFactory mcf;
+	auto mconf = mcf.configurator(cs);
+	// get fracture configurator
+	FractureConfiguratorFactory fcf;
+	auto fconf = mcf.configurator(cs);
+
+	if (1) { // load model...		
+		Settings ms(s.json["model"]);
+		auto model = load_model(ms);
+		mconf->configure(*model);
+		fconf->configure(*model);
+	}
 }
 

@@ -12,9 +12,11 @@ if(Boost_FOUND)
 INCLUDE_DIRECTORIES(${INCLUDE_DIRECTORIES} .
 										../../../json/src
 										../../../Catch/include
-										../../src)
+										../../src
+										../../configurator/src)
 
 SET (tensor_permeability_SRC 
+		../../src/ttrans_test.cpp
 		../../src/settings.cpp
 		../../src/settings_test.cpp
 		../../src/configurator.cpp
@@ -23,15 +25,22 @@ SET (tensor_permeability_SRC
 		../../test/main.cpp
 		../../test/dev.cpp
 		../../configurator/src/matrix_configurator_factory.cpp
-		../../configurator/src/uniform_matrix_configurator.cpp)
+		../../configurator/src/fracture_configurator_factory.cpp
+		../../configurator/src/uniform_matrix_configurator.cpp
+		../../configurator/src/uniform_fracture_configurator.cpp)
 
 SET (tensor_permeability_HEADER
+		../../src/bpreds.h
+		../../src/elops.h
+		../../src/ttrans.h
 		../../src/settings.h
 		../../src/configurator.h
 		../../src/configurator_factory.h
 		../../src/model_io.h
 		../../configurator/src/matrix_configurator_factory.h
-		../../configurator/src/uniform_matrix_configurator.h)
+		../../configurator/src/fracture_configurator_factory.h
+		../../configurator/src/uniform_matrix_configurator.h
+		../../configurator/src/uniform_fracture_configurator.h)
 
 LINK_DIRECTORIES(${BOOST_LIBRARYDIR})
 ADD_EXECUTABLE(tensor_permeability ${tensor_permeability_SRC} ${tensor_permeability_HEADER})

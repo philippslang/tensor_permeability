@@ -9,6 +9,7 @@ using namespace std;
 namespace csmp {
 	namespace tperm {
 
+
 		MatrixConfiguratorFactory::MatrixConfiguratorFactory()
 			: ConfiguratorFactory()
 		{
@@ -19,21 +20,24 @@ namespace csmp {
 		{
 		}
 
+
+		/**
+		Returns nullptr if settings incorrect.
+		*/
 		std::unique_ptr<Configurator> MatrixConfiguratorFactory::configurator(const Settings& s) const
 		{
 			std::unique_ptr<Configurator> pConf(nullptr);
-			const string c = s.json["matrix configuration"].get<string>();
+			const string c = s.json["configuration"].get<string>();
 
-			if (c == string("uniform matrix")) {
-				const TensorVariable<3> mperm;
+			if (c == string("uniform")) {
+				const TensorVariable<3> mperm = tensor("permeability", s);
 				pConf.reset(new UniformMatrixConfigurator(mperm));
 			}
 			else if (0) {
-				int x;
 			}
-			
 			return pConf;
 		}
+
 
 	} // !tperm
 } // ! csmp

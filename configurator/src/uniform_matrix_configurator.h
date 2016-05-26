@@ -26,7 +26,7 @@ namespace csmp {
 
 		/** \class UniformMatrixConfigurator
 
-		Configures the csmp::Region `MATRIX` to a uniform `permeability`.
+		Configures equidimensional elements to a uniform `permeability` for a 3D model.
 		*/
 
 	} // !tperm
