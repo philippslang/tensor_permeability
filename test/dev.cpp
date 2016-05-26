@@ -7,6 +7,7 @@
 #include "matrix_configurator_factory.h"
 #include "fracture_configurator_factory.h"
 #include "configurator.h"
+#include "sort_boundaries.h"
 
 #include "Model.h"
 #include "TensorVariable.h"
@@ -26,32 +27,24 @@ TEST_CASE("reading base configuration file") {
 
 
 TEST_CASE("model factory nullptr") {
-	Settings s;
-	s.json = R"({
-				 "model": {
+	Settings ms;
+	ms.json = R"({
                      "file name": "debug",
-					 "format": "icem"
-                 }
+					 "format": "none"
 				})"_json;
-	Settings ms(s.json["model"]);
-	ms.json["format"] = "none";
-	// nullptr expected because of "format": "none"
 	auto nomodel = load_model(ms);
 	REQUIRE(nomodel == nullptr);
 }
 
 
 TEST_CASE("tensor extraction") {
-	Settings s;
-	s.json = R"({
-				 "configuration": {
-                     "tensor": 1.0,
-					 "tensor diagonal": [1.0, 2.0, 3.0],
-				     "tensor full": [1.0, 0.1, 0.1, 0.2, 2.0, 0.2, 0.3, 0.3, 3.0]
-                 }
+	Settings cs;
+	cs.json = R"({
+					"tensor": 1.0,
+					"tensor diagonal": [1.0, 2.0, 3.0],
+					"tensor full": [1.0, 0.1, 0.1, 0.2, 2.0, 0.2, 0.3, 0.3, 3.0]
 				})"_json;
 	// Spherical tensor
-	Settings cs(s.json["configuration"]);
 	REQUIRE(tensor("tensor", cs) == TensorVariable<3>(PLAIN, 1.0, 0., 0., 0., 1.0, 0., 0., 0., 1.0));
 	// Diagonal tensor
 	cs.json["tensor"] = {1.0, 2.0, 3.0};
@@ -86,6 +79,7 @@ TEST_CASE("flow tdd") {
 					 }
 				 }
 				})"_json;
+
 	// get matrix configurator
 	Settings cs(s.json["configuration"]["matrix"]);
 	MatrixConfiguratorFactory mcf;
@@ -94,11 +88,15 @@ TEST_CASE("flow tdd") {
 	FractureConfiguratorFactory fcf;
 	auto fconf = mcf.configurator(cs);
 
-	if (1) { // load model...		
+	if (1) { 
+		// load model...		
 		Settings ms(s.json["model"]);
 		auto model = load_model(ms);
+		// configure material properties
 		mconf->configure(*model);
 		fconf->configure(*model);
+		// sort boundaries
+		Boundaries bds = sort_boundaries(*model, s);
 	}
 }
 

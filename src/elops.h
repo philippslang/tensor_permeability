@@ -19,8 +19,6 @@ namespace csmp {
 		}
 
 
-
-
 	} // !tperm
 } // !csmp
 

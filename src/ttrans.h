@@ -8,7 +8,7 @@
 
 #include <array>
 
-
+// These methods are inlined and work with mutable parameters instead of returns for performance
 namespace csmp {
 	namespace tperm {
 
@@ -44,6 +44,7 @@ namespace csmp {
 					ttrans(i, j) = dcosine(j);
 			}
 		}
+
 
 		/// Tensor rotation from tvar to tvart using ttrans
 		inline void trans_tensor(const TensorVariable<3>& ttrans, const TensorVariable<3>& tvar, TensorVariable<3>& tvart)
