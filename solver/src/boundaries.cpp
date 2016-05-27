@@ -10,6 +10,7 @@ namespace csmp {
 		}
 
 
+		/// Initializes three empty Boundary pairs
 		Boundaries::Boundaries()
 			: boundaries_(3)
 		{

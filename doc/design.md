@@ -38,7 +38,6 @@ The tensor `hydraulic aperture` has to honour that the fracture normal eigenvect
 
 The variable `permeability` is only initialized for the matrix of the model
 
-## Todo
-
-- 2D support
-- Internal boundaries, means regions. requires a keyword to set elements cond to zero and not include in fracs output
+@todo need an exception and log policy
+@todo 2D support
+@todo Internal boundaries, means regions. requires a keyword to set elements cond to zero and not include in fracs output

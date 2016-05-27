@@ -1,20 +1,49 @@
 #include "sort_boundaries.h"
 
+#include "Model.h"
+
+using namespace std;
+
 namespace csmp {
 	namespace tperm{
-
 		
 
 		/**
-		Generates tperm::Boundary objects and sorts them into tperm::OpposingBoundaries.
-		Busy hi-level method with lots of dependencies.
-		*/
-		Boundaries sort_boundaries(const Model<3>&, const Settings&)
-		{
-			Boundaries bds;
+		In this form we just check whether `LEFT` is present, then we're dealing with the legacy format (works for both 2 and 3D)
+		The returned vector so far returns boundaries for the 3D case, the 2D case can discard the last entry
 
+		@todo This needs a more rigorous implementation, and perhaps a check if all boundaries exist, even though this should trigger later exceptions at a lower level
+		@todo Region support
+		*/
+		vector<pair<string, string>> opposing_boundary_names(const Model<3>& m)
+		{
+			if (m.ContainsBoundary((string)"LEFT"))
+				return { { "LEFT", "RIGHT" },{ "TOP", "BOTTOM" },{ "FRONT", "BACK" } };
+			return { { "BOUNDARY1", "BOUNDARY2" },{ "BOUNDARY3", "BOUNDARY4" },{ "BOUNDARY5", "BOUNDARY6" } };
+		}
+
+
+		/**
+		Generates tperm::Boundary objects and sorts them into tperm::OpposingBoundaries.
+
+		@todo Different boundaries (internal) from settings file
+		@todo 3D only
+		@todo Region support
+		*/
+		Boundaries sort_boundaries(const Model<3>& m, const Settings& s)
+		{
+			auto obnames = opposing_boundary_names(m);
+			Boundaries bds;
+			for (size_t i(0); i < bds.size(); ++i) {
+				bds[i].first.assign(m.Boundary(obnames[i].first).NodesBegin(), m.Boundary(obnames[i].first).NodesEnd()); // in
+				bds[i].second.assign(m.Boundary(obnames[i].second).NodesBegin(), m.Boundary(obnames[i].second).NodesEnd()); // out
+			}
 			return bds;
 		}
+
+
+		
+
 
 	} // !tperm
 } // !csmp

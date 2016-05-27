@@ -19,8 +19,6 @@ namespace csmp {
 		is normal to this plane, the other two `eloc` are on the plane. Assumes global coordinate system as 
 		`e1(1,0,0)`, `e2(0,1,0)`, and `e3(0,0,1)`. Local e2loc (y-axis) is in global y-x plane, such that 
 		`e2loc` is the projection of `e2` onto plane created by three points.
-
-		@todo check if last normalization is necessary, think not
 		*/
 		inline void local_uvecs(const std::array<csmp::Point<3>, 3>& pts, std::array<csmp::VectorVariable<3>, 3>& eloc)
 		{

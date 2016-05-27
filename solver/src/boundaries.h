@@ -25,7 +25,7 @@ namespace csmp {
 
 			template <typename InputIterator>
 			void assign(InputIterator first, InputIterator last) {
-				nodes_.assing(first, last);
+				nodes_.assign(first, last);
 			}
 
 		private:
@@ -45,7 +45,7 @@ namespace csmp {
 			size_t size() const { return boundaries_.size(); }
 
 			/// This is a check-bounds accessor
-			const OpposingBoundaries& operator[](size_t i) const { return boundaries_.at(i); }
+			OpposingBoundaries& operator[](size_t i) { return boundaries_.at(i); }
 
 		private:
 			std::vector<OpposingBoundaries> boundaries_;
