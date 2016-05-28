@@ -15,6 +15,7 @@ INCLUDE_DIRECTORIES(${INCLUDE_DIRECTORIES} .
 										../../src
 										../../configurator/src
 										../../solver/src
+										../../analysis/src
 										../..)
 
 SET (tensor_permeability_SRC 
@@ -26,6 +27,8 @@ SET (tensor_permeability_SRC
 		../../src/model_io.cpp
 		../../test/main.cpp
 		../../test/dev.cpp
+		../../analysis/src/omega_configurator_factory.cpp
+		../../analysis/src/omega_bdistance_configurator.cpp
 		../../solver/src/pressure_solver.cpp
 		../../solver/src/boundaries.cpp
 		../../solver/src/sort_boundaries.cpp
@@ -42,6 +45,8 @@ SET (tensor_permeability_HEADER
 		../../src/configurator.h
 		../../src/configurator_factory.h
 		../../src/model_io.h
+		../../analysis/src/omega_configurator_factory.h
+		../../analysis/src/omega_bdistance_configurator.h
 		../../solver/src/pressure_solver.h
 		../../solver/src/boundaries.h
 		../../solver/src/sort_boundaries.h

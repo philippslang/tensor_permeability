@@ -14,7 +14,7 @@ Pervasive assumptions throughout the application are
 - Viscosity is unity
 - Boundary naming conventions are, as opposing pairs, `BOUNDARY1` and `BOUNDARY2`, or `TOP` and `BOTTOM` , etc... Internally, they are only used in terms of their nodes, so they could be regions (internal) too
 - Matrix elements are equi-dimensional and fracture elements are lower dimensional
-- Upscaled permeability is obtained for all (non-unique) regions in the model with names starting with `OMEGA`
+- Upscaled permeability is obtained for all (non-unique) regions in the model with names starting with `omega`
 - The variables that exist throughout the lifetime of the Model are (3D)
 		
 		// fluid pressure solver (internal)

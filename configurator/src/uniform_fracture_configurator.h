@@ -14,6 +14,7 @@ namespace csmp {
 		class UniformFractureConfigurator : public Configurator
 		{
 		public:
+			UniformFractureConfigurator() = delete;
 			/// Allowing for full tensor to be specified
 			UniformFractureConfigurator(const csmp::TensorVariable<3>&, double);
 			/// Spherical tensor, i.e. isotropic transmissivity
@@ -26,9 +27,9 @@ namespace csmp {
 			void input_am(Model&, const std::vector<Element<3>*>&) const;
 			void project_ah(Model&, const std::vector<Element<3>*>&) const;
 
-			bool project_; ///< Hydraulic aperture is isotropic (only ah_xx and ah_yy set) and needs projection
-			double am_;
-			csmp::TensorVariable<3> ah_;
+			const bool project_; ///< Hydraulic aperture is isotropic (only ah_xx and ah_yy set) and needs projection
+			const double am_;
+			const csmp::TensorVariable<3> ah_;
 		};
 
 		/** \class UniformFractureConfigurator

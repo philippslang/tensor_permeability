@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "SAMG_Solver.h"
 #include "SAMG_Settings.h"
+#include "MGMRES_Solver.h"
 #include "PDE_Integrator.h"
 #include "NumIntegral_dNT_op_dN_dV.h"
 #include "NumIntegral_NT_op_N_dV.h"
@@ -122,7 +123,8 @@ namespace csmp {
 		void solve_pressure(csmp::Model<3>& m)
 		{
 			SAMG_Settings samg_settings;
-			SAMG_Solver lin_solver(&samg_settings);			
+			//SAMG_Solver lin_solver(&samg_settings);	
+MGMRES_Solver lin_solver(1.0E-16, 1.0E-8, 1000, 100);
 
 			PDE_Integrator<3, Region> ssfp(&lin_solver);
 			// conductance matrix [K] on the left-hand side
@@ -154,7 +156,7 @@ namespace csmp {
 		void pgrad_and_vel(csmp::Model<3>& m, size_t d)
 		{
 			const VectorVariable<3> zero_vec(PLAIN, 0.);
-			array<string, 2> rvnames = { (string) "pressure gradient " + to_string(d), (string) "velocity " + to_string(d) };
+			const array<string, 2> rvnames = { (string) "pressure gradient " + to_string(d), (string) "velocity " + to_string(d) };
 			const Index pgKey(m.Database().StorageKey(rvnames[0].c_str()));
 			const Index vKey(m.Database().StorageKey(rvnames[1].c_str()));
 			const bool twod = !containsVolumeElements(m.Region("Model"));
@@ -162,7 +164,7 @@ namespace csmp {
 			const Index ahKey(m.Database().StorageKey("hydraulic aperture"));
 			const Index kKey(m.Database().StorageKey("permeability"));
 			const Index pKey(m.Database().StorageKey("fluid pressure"));
-			DenseMatrix<DM_MIN>   DERIV(3, 3);
+			DenseMatrix<DM_MIN> DERIV(3, 3);
 			TensorVariable<3> k;
 			VectorVariable<3> velo, grad;
 			double pf(0.);
@@ -185,9 +187,7 @@ namespace csmp {
 				const size_t nc(eit->Nodes());
 				for (size_t i = 0; i < nc; ++i) {
 					pf = eit->N(i)->Read(pKey);
-					grad(0) += pf * DERIV(0, i);
-					grad(1) += pf * DERIV(1, i);
-					grad(2) += pf * DERIV(2, i);
+					grad(0) += pf * DERIV(0, i); grad(1) += pf * DERIV(1, i); grad(2) += pf * DERIV(2, i);
 					velo(0) += -pf * (k(0, 0)*DERIV(0, i) + k(0, 1)*DERIV(1, i) + k(0, 2)*DERIV(2, i));
 					velo(1) += -pf * (k(1, 0)*DERIV(0, i) + k(1, 1)*DERIV(1, i) + k(1, 2)*DERIV(2, i));
 					velo(2) += -pf * (k(2, 0)*DERIV(0, i) + k(2, 1)*DERIV(1, i) + k(2, 2)*DERIV(2, i));
@@ -197,6 +197,7 @@ namespace csmp {
 				eit->Store(pgKey, grad);
 			}
 		}
+
 
 	} // !tperm
 } // !csmp

@@ -13,15 +13,16 @@ namespace csmp {
 		class UniformMatrixConfigurator : public Configurator
 		{
 		public:
+			UniformMatrixConfigurator() = delete;
 			/// Allowing for full tensor to be specified
-			UniformMatrixConfigurator(const csmp::TensorVariable<3>&);
+			explicit UniformMatrixConfigurator(const csmp::TensorVariable<3>&);
 			/// Spherical tensor, i.e. isotropic permeability
-			UniformMatrixConfigurator(double);
+			explicit UniformMatrixConfigurator(double);
 
 			virtual bool configure(Model&) const;
 
 		private:
-			csmp::TensorVariable<3> perm_;
+			const csmp::TensorVariable<3> perm_;
 		};
 
 		/** \class UniformMatrixConfigurator

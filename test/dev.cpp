@@ -9,6 +9,7 @@
 #include "configurator.h"
 #include "sort_boundaries.h"
 #include "pressure_solver.h"
+#include "omega_configurator_factory.h"
 
 #include "Model.h"
 #include "TensorVariable.h"
@@ -78,7 +79,11 @@ TEST_CASE("flow tdd") {
 						 "mechanical aperture": 0.01, 
 						 "hydraulic aperture": 0.001
 					 }
-				 }
+				 },
+				"analysis":{
+					"configuration": "uniform boundary distance",
+					"distance": 1.0
+				}
 				})"_json;
 
 	// get matrix configurator
@@ -89,6 +94,10 @@ TEST_CASE("flow tdd") {
 	Settings fcs(s.json["configuration"]["fractures"]);
 	FractureConfiguratorFactory fcf;
 	auto fconf = fcf.configurator(fcs);
+	// get omega generator
+	Settings acs(s.json["analysis"]);
+	OmegaConfiguratorFactory ocf;
+	auto oconf = ocf.configurator(acs);
 
 	if (1) { 
 		// load model...		
@@ -100,9 +109,11 @@ TEST_CASE("flow tdd") {
 		// compute conductivity
 		conductivity(*model);
 		// sort boundaries
-		Boundaries bds = sort_boundaries(*model, s);
+		auto bds = sort_boundaries(*model, s);
 		// ready to solve
 		solve(bds, *model);
+		// generate omegas
+		oconf->configure(*model);
 	}
 }
 
