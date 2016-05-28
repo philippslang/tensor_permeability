@@ -8,6 +8,7 @@
 #include "fracture_configurator_factory.h"
 #include "configurator.h"
 #include "sort_boundaries.h"
+#include "solver\src\solver.h"
 
 #include "Model.h"
 #include "TensorVariable.h"
@@ -95,8 +96,12 @@ TEST_CASE("flow tdd") {
 		// configure material properties
 		mconf->configure(*model);
 		fconf->configure(*model);
+		// compute conductivity
+		conductivity(*model);
 		// sort boundaries
 		Boundaries bds = sort_boundaries(*model, s);
+		// ready to solve
+		solve(bds, *model);
 	}
 }
 

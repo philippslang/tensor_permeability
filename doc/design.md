@@ -10,6 +10,7 @@ The results of each pressure run are stored in `pressure gradient 0` and `veloci
 
 Pervasive assumptions throughout the application are
 
+- Viscosity is unity
 - Boundary naming conventions are, as opposing pairs, `BOUNDARY1` and `BOUNDARY2`, or `TOP` and `BOTTOM` , etc... Internally, they are only used in terms of their nodes, so they could be regions (internal) too
 - Matrix elements are equi-dimensional and fracture elements are lower dimensional
 - Upscaled permeability is obtained for all (non-unique) regions in the model with names starting with `OMEGA`
@@ -38,6 +39,7 @@ The tensor `hydraulic aperture` has to honour that the fracture normal eigenvect
 
 The variable `permeability` is only initialized for the matrix of the model
 
+@todo consolidate 2D criterion to function
 @todo need an exception and log policy
-@todo 2D support
+@todo 2D support, highlight whats not ready with todos
 @todo Internal boundaries, means regions. requires a keyword to set elements cond to zero and not include in fracs output

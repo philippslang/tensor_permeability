@@ -38,7 +38,7 @@ namespace csmp {
 		{			
 			auto felmts = model.ElementsFrom(FractureElement<3>(false));
 			input_am(model, felmts);
-			Index ahKey(model.Database().StorageKey("hydraulic aperture"));
+			const Index ahKey(model.Database().StorageKey("hydraulic aperture"));
 			if (!project_)
 				for (const auto& it : felmts)
 					it->Store(ahKey, ah_);
@@ -51,7 +51,7 @@ namespace csmp {
 		/// Inputs mechanical aperture
 		void UniformFractureConfigurator::input_am(Model& model, const std::vector<Element<3>*>& felmts) const
 		{
-			Index amKey(model.Database().StorageKey("mechanical aperture"));
+			const Index amKey(model.Database().StorageKey("mechanical aperture"));
 			const ScalarVariable am(PLAIN, am_);
 			for (const auto& it : felmts)
 				it->Store(amKey, am);

@@ -40,12 +40,14 @@ namespace csmp {
 			typedef std::pair<Boundary, Boundary> OpposingBoundaries;
 
 			Boundaries();
+			explicit Boundaries(size_t);
 
 			/// Number of OpposingBoundaries
 			size_t size() const { return boundaries_.size(); }
 
 			/// This is a check-bounds accessor
 			OpposingBoundaries& operator[](size_t i) { return boundaries_.at(i); }
+			const OpposingBoundaries& operator[](size_t i) const { return boundaries_.at(i); }
 
 		private:
 			std::vector<OpposingBoundaries> boundaries_;

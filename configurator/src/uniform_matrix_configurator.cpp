@@ -26,7 +26,7 @@ namespace csmp {
 		{
 			auto melmts = model.ElementsFrom(MatrixElement<3>(false));
 			const char* vname = "permeability";
-			Index pKey(model.Database().StorageKey(vname));
+			const Index pKey(model.Database().StorageKey(vname));
 			for (const auto& it: melmts)
 				it->Store(pKey, perm_);			
 			return true;

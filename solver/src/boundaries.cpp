@@ -17,5 +17,12 @@ namespace csmp {
 		}
 
 
+		/// Initializes d empty Boundary pairs
+		Boundaries::Boundaries(size_t d)
+			: boundaries_(d)
+		{
+		}
+
+
 	} // !tperm
 } // !csmp

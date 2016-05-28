@@ -27,16 +27,16 @@ namespace csmp {
 		Generates tperm::Boundary objects and sorts them into tperm::OpposingBoundaries.
 
 		@todo Different boundaries (internal) from settings file
-		@todo 3D only
 		@todo Region support
 		*/
 		Boundaries sort_boundaries(const Model<3>& m, const Settings& s)
 		{
+			const size_t d = containsVolumeElements(m.Region("Model")) ? 3 : 2;
 			auto obnames = opposing_boundary_names(m);
-			Boundaries bds;
-			for (size_t i(0); i < bds.size(); ++i) {
-				bds[i].first.assign(m.Boundary(obnames[i].first).NodesBegin(), m.Boundary(obnames[i].first).NodesEnd()); // in
-				bds[i].second.assign(m.Boundary(obnames[i].second).NodesBegin(), m.Boundary(obnames[i].second).NodesEnd()); // out
+			Boundaries bds(d);
+			for (size_t i(0); i < d; ++i) {
+				bds[i].first.assign(m.Boundary(obnames.at(i).first).NodesBegin(), m.Boundary(obnames.at(i).first).NodesEnd()); // in
+				bds[i].second.assign(m.Boundary(obnames.at(i).second).NodesBegin(), m.Boundary(obnames.at(i).second).NodesEnd()); // out
 			}
 			return bds;
 		}

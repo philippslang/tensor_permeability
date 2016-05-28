@@ -14,7 +14,8 @@ INCLUDE_DIRECTORIES(${INCLUDE_DIRECTORIES} .
 										../../../Catch/include
 										../../src
 										../../configurator/src
-										../../solver/src)
+										../../solver/src
+										../..)
 
 SET (tensor_permeability_SRC 
 		../../src/ttrans_test.cpp
@@ -25,6 +26,7 @@ SET (tensor_permeability_SRC
 		../../src/model_io.cpp
 		../../test/main.cpp
 		../../test/dev.cpp
+		../../solver/src/pressure_solver.cpp
 		../../solver/src/boundaries.cpp
 		../../solver/src/sort_boundaries.cpp
 		../../configurator/src/matrix_configurator_factory.cpp
@@ -40,6 +42,7 @@ SET (tensor_permeability_HEADER
 		../../src/configurator.h
 		../../src/configurator_factory.h
 		../../src/model_io.h
+		../../solver/src/pressure_solver.h
 		../../solver/src/boundaries.h
 		../../solver/src/sort_boundaries.h
 		../../configurator/src/matrix_configurator_factory.h
