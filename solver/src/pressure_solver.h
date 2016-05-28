@@ -4,7 +4,7 @@
 
 
 namespace csmp {
-	class Index;
+	struct Index;
 	template<size_t> class Model;
 
 	namespace tperm {
@@ -22,6 +22,9 @@ namespace csmp {
 
 		/// Solves steady-state diffusion
 		void solve_pressure(csmp::Model<3>&);
+
+		/// Computes and stores pressure gradient and velocity
+		void pgrad_and_vel(csmp::Model<3>&, size_t);
 
 
 	} // !tperm

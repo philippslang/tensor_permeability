@@ -54,7 +54,7 @@ namespace csmp {
 			const Index amKey(model.Database().StorageKey("mechanical aperture"));
 			const ScalarVariable am(PLAIN, am_);
 			for (const auto& it : felmts)
-				it->Store(amKey, am);
+				it->Store(amKey, am);				
 		}
 
 
@@ -67,7 +67,7 @@ namespace csmp {
 			array<VectorVariable<3>, 3> eloc;        // element plane unit vectors w.r.t. glob coord-system
 			array<csmp::Point<3>, 3> pts;            // three points on fracture plane
 			TensorVariable<3> trans_tens, ah_glob;   // transformation tensor and element aperture in global coords
-			VectorVariable<3> dcosine;               // direction cosine
+			VectorVariable<3> dcosine;               // direction cosine 
 
 			for (const auto& it : felmts) {
 				nd_coords(it, pts);      // get local nodes

@@ -1,4 +1,4 @@
-#include "solver.h"
+#include "pressure_solver.h"
 #include "boundaries.h"
 #include "bpreds.h"
 
@@ -8,6 +8,8 @@
 #include "PDE_Integrator.h"
 #include "NumIntegral_dNT_op_dN_dV.h"
 #include "NumIntegral_NT_op_N_dV.h"
+
+#include <array>
 
 using namespace std;
 
@@ -35,16 +37,16 @@ namespace csmp {
 		*/
 		void conductivity(Model<3>& m)
 		{
-			const bool twod = containsVolumeElements(m.Region("Model"));
+			const bool twod = !containsVolumeElements(m.Region("Model"));
 			const Index kKey(m.Database().StorageKey("conductivity"));
 			const Index ahKey(m.Database().StorageKey("hydraulic aperture"));
 			const Index pKey(m.Database().StorageKey("permeability"));
-			MatrixElement<3> mbp(twod);
+			const MatrixElement<3> mbp(twod);
 			TensorVariable<3> ttemp(PLAIN, 0.);
 			// reset first
 			m.Region("Model").InputPropertyValue("conductivity", ttemp);
 			// set
-			for (auto& ePtr : m.Region("Model").ElementVector()) {
+			for (const auto& ePtr : m.Region("Model").ElementVector()) {
 				if (mbp(ePtr)) { // matrix
 					ePtr->Read(pKey, ttemp);
 				} else { // fracture
@@ -77,24 +79,20 @@ namespace csmp {
 		*/
 		void solve(const Boundaries& bds, Model<3>& m)
 		{
-			const VectorVariable<3> zero_vec(PLAIN, 0.);
 			const Parameter fp = m.Database().Parameter("fluid pressure");
 			// reset fluid volume source
 			m.Region("Model").InputPropertyValue("fluid volume source", makeScalar(PLAIN, 0.));
 			// for each boundary set
 			for (size_t d(0); d < bds.size(); ++d) {
-				// reset fluid pressure, vels and pgrads
-				auto rvnames = { (string) "pressure gradient " + to_string(d), (string) "velocity " + to_string(d) };
+				// reset fluid pressure
 				m.Region("Model").InputPropertyValue(fp.name.c_str(), makeScalar(PLAIN, 0.));
-				for (const auto& rv : rvnames)
-					m.Region("Model").InputPropertyValue(rv.c_str(), zero_vec);
 				// apply BCs
 				dirichlet_scalar_bc(bds[d].first, fp.key, 1.0);
 				dirichlet_scalar_bc(bds[d].second, fp.key, -1.0);
 				// solve pressure
-				// compute pressure gradient
-				// compute velocity
-				// store results
+				solve_pressure(m);
+				// store pressure gradient and velocity
+				pgrad_and_vel(m, d);
 			}
 		}
 
@@ -124,19 +122,81 @@ namespace csmp {
 		void solve_pressure(csmp::Model<3>& m)
 		{
 			SAMG_Settings samg_settings;
-			SAMG_Solver samg_solver(&samg_settings);			
+			SAMG_Solver lin_solver(&samg_settings);			
 
-			PDE_Integrator<3, Region> ssfp((csmp::Solver*) &samg_solver);
+			PDE_Integrator<3, Region> ssfp(&lin_solver);
 			// conductance matrix [K] on the left-hand side
 			NumIntegral_dNT_op_dN_dV<3> conductance(m.Database(), "conductivity", "fluid pressure", "fluid pressure");
 			// source vector {Q} on the right-hand side
 			NumIntegral_NT_op_N_dV<3> source(m.Database(), "fluid volume source", "fluid pressure");
-			// add PDE_Operators to the FE Algorithm
 			ssfp.Add(&conductance);
 			ssfp.Add(&source);
 			m.Apply(ssfp);
 		}
 
+
+		/**
+		Relies on the following variables:
+
+			\code
+			// initialized material props
+			hydraulic aperture	hy	m	3	0	1	ELEMENT
+			permeability	pe	m2	3	1e-25	1e-08	ELEMENT
+			// pressure field
+			fluid pressure	fl	Pa	1	-1e-05	1e+09	NODE
+			// result variables, for provided dimension d
+			pressure gradient 0	pr	Pa m-1	2	-1e+20	1e+20	ELEMENT
+			velocity 0	ve	m s-1	2	-100	100	ELEMENT
+			\endcode
+
+		Assumes unit viscosity.
+		*/
+		void pgrad_and_vel(csmp::Model<3>& m, size_t d)
+		{
+			const VectorVariable<3> zero_vec(PLAIN, 0.);
+			array<string, 2> rvnames = { (string) "pressure gradient " + to_string(d), (string) "velocity " + to_string(d) };
+			const Index pgKey(m.Database().StorageKey(rvnames[0].c_str()));
+			const Index vKey(m.Database().StorageKey(rvnames[1].c_str()));
+			const bool twod = !containsVolumeElements(m.Region("Model"));
+			const MatrixElement<3> mbp(twod);
+			const Index ahKey(m.Database().StorageKey("hydraulic aperture"));
+			const Index kKey(m.Database().StorageKey("permeability"));
+			const Index pKey(m.Database().StorageKey("fluid pressure"));
+			DenseMatrix<DM_MIN>   DERIV(3, 3);
+			TensorVariable<3> k;
+			VectorVariable<3> velo, grad;
+			double pf(0.);
+			// reset
+			for (const auto& rv : rvnames)
+				m.Region("Model").InputPropertyValue(rv.c_str(), zero_vec);
+			// vt = -k (lt grad p)
+			for (const auto& eit : m.Region("Model").ElementVector()) {
+				// get k tensor, assuming unit viscosity
+				if (mbp(eit)) // if matrix element, k is permeability
+					eit->Read(kKey, k);
+				else { // if fracture element, k is ah^2/12
+					eit->Read(ahKey, k);
+					k.Power(2.);
+					k /= 12.;
+				}
+				// compute
+				velo = 0.; grad = 0.;
+				eit->dN_AtBaryCenter(DERIV, 1U);
+				const size_t nc(eit->Nodes());
+				for (size_t i = 0; i < nc; ++i) {
+					pf = eit->N(i)->Read(pKey);
+					grad(0) += pf * DERIV(0, i);
+					grad(1) += pf * DERIV(1, i);
+					grad(2) += pf * DERIV(2, i);
+					velo(0) += -pf * (k(0, 0)*DERIV(0, i) + k(0, 1)*DERIV(1, i) + k(0, 2)*DERIV(2, i));
+					velo(1) += -pf * (k(1, 0)*DERIV(0, i) + k(1, 1)*DERIV(1, i) + k(1, 2)*DERIV(2, i));
+					velo(2) += -pf * (k(2, 0)*DERIV(0, i) + k(2, 1)*DERIV(1, i) + k(2, 2)*DERIV(2, i));
+				}
+				// store
+				eit->Store(vKey, velo);
+				eit->Store(pgKey, grad);
+			}
+		}
 
 	} // !tperm
 } // !csmp

@@ -8,7 +8,7 @@
 #include "fracture_configurator_factory.h"
 #include "configurator.h"
 #include "sort_boundaries.h"
-#include "solver\src\solver.h"
+#include "pressure_solver.h"
 
 #include "Model.h"
 #include "TensorVariable.h"
@@ -82,12 +82,13 @@ TEST_CASE("flow tdd") {
 				})"_json;
 
 	// get matrix configurator
-	Settings cs(s.json["configuration"]["matrix"]);
+	Settings mcs(s.json["configuration"]["matrix"]);
 	MatrixConfiguratorFactory mcf;
-	auto mconf = mcf.configurator(cs);
+	auto mconf = mcf.configurator(mcs);
 	// get fracture configurator
+	Settings fcs(s.json["configuration"]["fractures"]);
 	FractureConfiguratorFactory fcf;
-	auto fconf = mcf.configurator(cs);
+	auto fconf = fcf.configurator(fcs);
 
 	if (1) { 
 		// load model...		
