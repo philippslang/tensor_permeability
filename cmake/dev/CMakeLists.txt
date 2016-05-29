@@ -27,6 +27,9 @@ SET (tensor_permeability_SRC
 		../../src/model_io.cpp
 		../../test/main.cpp
 		../../test/dev.cpp
+		../../analysis/src/fetch.cpp
+		../../analysis/src/analyze.cpp
+		../../analysis/src/results.cpp
 		../../analysis/src/omega_configurator_factory.cpp
 		../../analysis/src/omega_bdistance_configurator.cpp
 		../../solver/src/pressure_solver.cpp
@@ -45,6 +48,9 @@ SET (tensor_permeability_HEADER
 		../../src/configurator.h
 		../../src/configurator_factory.h
 		../../src/model_io.h
+		../../analysis/src/fetch.h
+		../../analysis/src/analyze.h
+		../../analysis/src/results.h
 		../../analysis/src/omega_configurator_factory.h
 		../../analysis/src/omega_bdistance_configurator.h
 		../../solver/src/pressure_solver.h

@@ -15,7 +15,7 @@ namespace csmp {
 		{
 		public:
 			/// All elements
-			explicit OmegaBDistanceConfigurator();
+			OmegaBDistanceConfigurator();
 			/// All with distance from model boundaries
 			explicit OmegaBDistanceConfigurator(double);
 
