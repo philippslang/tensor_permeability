@@ -19,6 +19,19 @@ namespace csmp {
 			return true;
 		}
 
+
+		/// Removes line element regions for 3D models
+		void cleanup(csmp::Model<3>& m)
+		{
+			if (containsVolumeElements(m.Region("Model")))
+				for (auto it = m.UniqueRegionsBegin(); it != m.UniqueRegionsEnd(); ++it)
+					if (containsLineElements(it->second) && it->first != "Model")
+					{
+						m.RemoveRegion(it->first.c_str(), true);
+						it = m.UniqueRegionsBegin();
+					}
+		}
+
 		
 		/**
 		## Option I (ANSYS)
@@ -41,7 +54,7 @@ namespace csmp {
 			"file name": "csp" 
 			"format": "csmp binary"
 
-		Returns nullptr if options not valid.
+		Removes line element regions if 3D model. Returns nullptr if options not valid.
 		*/
 		unique_ptr<csmp::Model<3>> load_model(const Settings& s)
 			{
@@ -60,6 +73,8 @@ namespace csmp {
 						pMod.reset(new ANSYS_Model3D(mfname.c_str(), vfname, true, true, false, true));
 				else if (option == "csmp binary") //csmp bin file based 
 					pMod.reset(new Model<3>(mfname.c_str()));
+				if (pMod)
+					cleanup(*pMod);
 				return pMod;
 			}
 

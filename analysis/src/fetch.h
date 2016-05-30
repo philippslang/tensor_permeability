@@ -2,15 +2,21 @@
 #ifndef FETCH_H
 #define FETCH_H
 
+#include <vector>
+#include <map>
+
+#include "results.h"
 
 namespace csmp {
 	template<size_t> class Model;
 
-	namespace tperm {
-		class FlowResults;
+	namespace tperm {		
 
-		/// Returns sorted Boundaries of the Model
-		FlowResults fetch(const char*, const csmp::Model<3>&);
+		/// Returns upscaled tensors for all  regions in model that contain `rtag`
+		std::map<std::string, UpscaledTensor> fetch(const csmp::Model<3>&, const char* rtag = "omega");
+
+		/// Returns FlowResults of the given region, as many as model dimensions
+		FlowResults fetch(size_t, const char*, const csmp::Model<3>&);
 
 		
 	} // !tperm

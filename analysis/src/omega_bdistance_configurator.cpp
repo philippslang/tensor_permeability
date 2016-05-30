@@ -28,7 +28,8 @@ namespace csmp {
 		{
 			Point<3> ebc;
 			m.UpdateIndices();
-			vector<size_t> omega_ids(m.Region("Model").Elements());
+			vector<size_t> omega_ids;
+			omega_ids.reserve(m.Region("Model").Elements());
 			for (const auto& eit : m.Region("Model").ElementVector())
 			{
 				ebc = eit->BaryCenter();
@@ -43,9 +44,9 @@ namespace csmp {
 						if (dist < dmin)
 							dmin = dist;
 					}
-					if (dmin <= dist_)
-						omega_ids.push_back(eit->Idx());
 				}
+				if (dmin <= dist_)
+					omega_ids.push_back(eit->Idx());
 			}
 			if (omega_ids.size())
 				m.FormRegionFrom("omega", omega_ids);

@@ -10,6 +10,7 @@
 #include "sort_boundaries.h"
 #include "pressure_solver.h"
 #include "omega_configurator_factory.h"
+#include "fetch.h"
 
 #include "Model.h"
 #include "TensorVariable.h"
@@ -76,13 +77,13 @@ TEST_CASE("flow tdd") {
 					 },
 					 "fractures":{
 						 "configuration": "uniform",
-						 "mechanical aperture": 0.01, 
-						 "hydraulic aperture": 0.001
+						 "mechanical aperture": 0.0001, 
+						 "hydraulic aperture": 0.0001
 					 }
 				 },
 				"analysis":{
 					"configuration": "uniform boundary distance",
-					"distance": 1.0
+					"distance": 2.0
 				}
 				})"_json;
 
@@ -114,6 +115,10 @@ TEST_CASE("flow tdd") {
 		solve(bds, *model);
 		// generate omegas
 		oconf->configure(*model);
+		// get upscaled tensors
+		auto omega_tensors = fetch(*model);
+		// report
+
 	}
 }
 

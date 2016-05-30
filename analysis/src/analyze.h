@@ -2,15 +2,18 @@
 #ifndef TP_ANALYZE_H
 #define TP_ANALYZE_H
 
+#include <vector>
 
-namespace tperm {
-	class FlowResults;
-	class UpscaledTensor;
+namespace csmp {
+	namespace tperm {
+		class FlowResults;
+		class UpscaledTensor;
 
-	/// Computes upscaled permeability tensor 
-	UpscaledTensor analyze(const FlowResults&);
+		/// Computes upscaled permeability tensor 
+		UpscaledTensor analyze(const std::vector<FlowResults>&);
 
-		
-} // !tperm
+
+	} // !tperm
+} // !csmp
 
 #endif // !TP_ANALYZE_H

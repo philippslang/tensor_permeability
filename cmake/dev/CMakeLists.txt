@@ -27,6 +27,7 @@ SET (tensor_permeability_SRC
 		../../src/model_io.cpp
 		../../test/main.cpp
 		../../test/dev.cpp
+		../../analysis/src/report.cpp
 		../../analysis/src/fetch.cpp
 		../../analysis/src/analyze.cpp
 		../../analysis/src/results.cpp
@@ -48,6 +49,7 @@ SET (tensor_permeability_HEADER
 		../../src/configurator.h
 		../../src/configurator_factory.h
 		../../src/model_io.h
+		../../analysis/src/report.h
 		../../analysis/src/fetch.h
 		../../analysis/src/analyze.h
 		../../analysis/src/results.h

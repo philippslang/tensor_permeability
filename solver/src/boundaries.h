@@ -23,6 +23,7 @@ namespace csmp {
 			/// This is a direct no-check accessor
 			Node<3>* operator[](size_t i) const { return nodes_[i]; }	
 
+			/// Assign node pointers
 			template <typename InputIterator>
 			void assign(InputIterator first, InputIterator last) {
 				nodes_.assign(first, last);
@@ -47,6 +48,7 @@ namespace csmp {
 
 			/// This is a check-bounds accessor
 			OpposingBoundaries& operator[](size_t i) { return boundaries_.at(i); }
+			/// This is a check-bounds const accessor
 			const OpposingBoundaries& operator[](size_t i) const { return boundaries_.at(i); }
 
 		private:
