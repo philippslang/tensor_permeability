@@ -12,7 +12,7 @@ namespace csmp {
 		class UpscaledTensor;
 
 		/// Computes upscaled permeability tensor 
-		void analyze(const std::map<std::string, UpscaledTensor>&, const Model<3>&);
+		void report(const std::map<std::string, UpscaledTensor>&, const Model<3>&);
 
 
 	} // !tperm

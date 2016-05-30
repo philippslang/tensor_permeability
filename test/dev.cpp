@@ -11,7 +11,7 @@
 #include "pressure_solver.h"
 #include "omega_configurator_factory.h"
 #include "fetch.h"
-
+#include "report.h"
 #include "Model.h"
 #include "TensorVariable.h"
 
@@ -24,6 +24,7 @@ TEST_CASE("reading base configuration file") {
 	std::ifstream f("config.json");
 	Settings s;
 	CHECK_NOTHROW(s.json << f);
+	f.close();
 	auto jconfig = s.json["configuration"];
 	REQUIRE(jconfig["matrix"]["configuration"].get<string>() == string("uniform"));
 }
@@ -118,7 +119,7 @@ TEST_CASE("flow tdd") {
 		// get upscaled tensors
 		auto omega_tensors = fetch(*model);
 		// report
-
+		report(omega_tensors, *model);
 	}
 }
 

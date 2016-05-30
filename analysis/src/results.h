@@ -60,6 +60,8 @@ namespace csmp {
 			/// Row-column const access
 			double  operator()(size_t r, size_t c) const { return t_.at(row_column_to_idx(r, c)); }
 
+			const std::vector<double>& raw() const { return t_; }
+
 		private:
 			size_t row_column_to_idx(size_t r, size_t c) const { return r*d_ + c; }
 
