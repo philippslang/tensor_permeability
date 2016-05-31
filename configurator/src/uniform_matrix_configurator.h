@@ -27,7 +27,12 @@ namespace csmp {
 
 		/** \class UniformMatrixConfigurator
 
-		Configures equidimensional elements to a uniform `permeability` for a 3D model.
+		Configures equidimensional elements to a uniform `permeability` (m2) and `conductivity` (m2/Pa.s) for a 3D model.
+
+		The following variables are initialized by the provided configurators:
+
+		conductivity	co	m2 Pa-1 s-1	3	1e-25	1	ELEMENT
+		permeability	pe	m2	3	1e-25	1e-08	ELEMENT
 		*/
 
 	} // !tperm

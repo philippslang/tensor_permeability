@@ -56,6 +56,13 @@ namespace csmp {
 		are of identical orientation. Also, the user has to take care that the transformation results in the fracture normal
 		aperture to be zero.
 
+		The following variables are initialized by the provided configurators:
+
+			hydraulic aperture	hy	m	3	0	1	ELEMENT
+			mechanical aperture	me	m	1	0	1	ELEMENT
+			conductivity	co	m2 Pa-1 s-1	3	1e-25	1	ELEMENT
+			permeability	pe	m2	3	1e-25	1e-08	ELEMENT
+
 		*/
 
 	} // !tperm

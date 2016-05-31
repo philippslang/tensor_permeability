@@ -51,6 +51,10 @@ namespace csmp {
 			"configuration": "uniform",
 			"permeability": [9.8911e-12, 7.5806e-13, 9.1479e-13, 7.5806e-13, 1.7099e-11, 1.753e-12, 9.1479e-13, 1.753e-12, 1.2423e-11]
 
+		The following variables are initialized by the provided configurators:
+
+			conductivity	co	m2 Pa-1 s-1	3	1e-25	1	ELEMENT
+			permeability	pe	m2	3	1e-25	1e-08	ELEMENT
 		*/
 
 	} // !tperm

@@ -20,15 +20,20 @@ namespace csmp {
 
 
 		/**
-		Assigns permeability to all equi-dimensional elements in `Model`
+		Assigns permeability and conductivity to all equi-dimensional elements in `Model`. Relies on the following variables:
+
+			conductivity	co	m2 Pa-1 s-1	3	1e-25	1	ELEMENT
+			permeability	pe	m2	3	1e-25	1e-08	ELEMENT
 		*/
 		bool UniformMatrixConfigurator::configure(Model& model) const
 		{
 			auto melmts = model.ElementsFrom(MatrixElement<3>(false));
-			const char* vname = "permeability";
-			const Index pKey(model.Database().StorageKey(vname));
-			for (const auto& it: melmts)
-				it->Store(pKey, perm_);			
+			const Index pKey(model.Database().StorageKey("permeability"));
+			const Index cKey(model.Database().StorageKey("conductivity"));
+			for (const auto& it : melmts) {
+				it->Store(pKey, perm_);
+				it->Store(cKey, perm_);
+			}
 			return true;
 		}
 

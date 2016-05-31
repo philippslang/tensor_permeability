@@ -45,7 +45,7 @@ namespace csmp {
 							dmin = dist;
 					}
 				}
-				if (dmin <= dist_)
+				if (dmin >= dist_)
 					omega_ids.push_back(eit->Idx());
 			}
 			if (omega_ids.size())

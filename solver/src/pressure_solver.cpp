@@ -18,47 +18,6 @@ namespace csmp {
 	namespace tperm{
 		
 
-		/**
-		Relies on the following variables:
-
-			\code
-			// porperly set
-			// fractures only (user)
-			hydraulic aperture	hy	m	3	0	1	ELEMENT
-			mechanical aperture	me	m	1	0	1	ELEMENT
-			// matrix only (user)
-			permeability	pe	m2	3	1e-25	1e-08	ELEMENT
-			// result, exist but must not be initialized, will contain results after exit
-			// will be [m2 / Pa.s] for matrix and [m3 / Pa.s] for fractures
-			conductivity	co	m2 Pa-1 s-1	3	1e-25	1	ELEMENT
-			\endcode
-
-		Viscosity is assumed unity. It follows that stored conductivity is equal to permeability for matrix,
-		and equal to transmissivity for fractures.
-		*/
-		void conductivity(Model<3>& m)
-		{
-			const bool twod = !containsVolumeElements(m.Region("Model"));
-			const Index kKey(m.Database().StorageKey("conductivity"));
-			const Index ahKey(m.Database().StorageKey("hydraulic aperture"));
-			const Index pKey(m.Database().StorageKey("permeability"));
-			const MatrixElement<3> mbp(twod);
-			TensorVariable<3> ttemp(PLAIN, 0.);
-			// reset first
-			m.Region("Model").InputPropertyValue("conductivity", ttemp);
-			// set
-			for (const auto& ePtr : m.Region("Model").ElementVector()) {
-				if (mbp(ePtr)) { // matrix
-					ePtr->Read(pKey, ttemp);
-				} else { // fracture
-					ePtr->Read(ahKey, ttemp);
-					ttemp.Power(3);
-					ttemp = ttemp / 12.;
-				}
-				ePtr->Store(kKey, ttemp);
-			}
-		}
-
 
 		/**
 		Relies on the following variables:
@@ -80,6 +39,7 @@ namespace csmp {
 		*/
 		void solve(const Boundaries& bds, Model<3>& m)
 		{
+			const double half_dp = 5.0E7;
 			const Parameter fp = m.Database().Parameter("fluid pressure");
 			// reset fluid volume source
 			m.Region("Model").InputPropertyValue("fluid volume source", makeScalar(PLAIN, 0.));
@@ -88,8 +48,8 @@ namespace csmp {
 				// reset fluid pressure
 				m.Region("Model").InputPropertyValue(fp.name.c_str(), makeScalar(PLAIN, 0.));
 				// apply BCs
-				dirichlet_scalar_bc(bds[d].first, fp.key, 1.0);
-				dirichlet_scalar_bc(bds[d].second, fp.key, -1.0);
+				dirichlet_scalar_bc(bds[d].first, fp.key, 1.0E8);
+				dirichlet_scalar_bc(bds[d].second, fp.key, 0.);
 				// solve pressure
 				solve_pressure(m);
 				// store pressure gradient and velocity
@@ -124,7 +84,7 @@ namespace csmp {
 		{
 			SAMG_Settings samg_settings;
 			//SAMG_Solver lin_solver(&samg_settings);	
-MGMRES_Solver lin_solver(1.0E-16, 1.0E-8, 1000, 100);
+MGMRES_Solver lin_solver(1.0E-9, 1.0E-8, 1000, 1);
 
 			PDE_Integrator<3, Region> ssfp(&lin_solver);
 			// conductance matrix [K] on the left-hand side
@@ -142,7 +102,6 @@ MGMRES_Solver lin_solver(1.0E-16, 1.0E-8, 1000, 100);
 
 			\code
 			// initialized material props
-			hydraulic aperture	hy	m	3	0	1	ELEMENT
 			permeability	pe	m2	3	1e-25	1e-08	ELEMENT
 			// pressure field
 			fluid pressure	fl	Pa	1	-1e-05	1e+09	NODE
@@ -161,7 +120,6 @@ MGMRES_Solver lin_solver(1.0E-16, 1.0E-8, 1000, 100);
 			const Index vKey(m.Database().StorageKey(rvnames[1].c_str()));
 			const bool twod = !containsVolumeElements(m.Region("Model"));
 			const MatrixElement<3> mbp(twod);
-			const Index ahKey(m.Database().StorageKey("hydraulic aperture"));
 			const Index kKey(m.Database().StorageKey("permeability"));
 			const Index pKey(m.Database().StorageKey("fluid pressure"));
 			DenseMatrix<DM_MIN> DERIV(3, 3);
@@ -174,13 +132,7 @@ MGMRES_Solver lin_solver(1.0E-16, 1.0E-8, 1000, 100);
 			// vt = -k (lt grad p)
 			for (const auto& eit : m.Region("Model").ElementVector()) {
 				// get k tensor, assuming unit viscosity
-				if (mbp(eit)) // if matrix element, k is permeability
-					eit->Read(kKey, k);
-				else { // if fracture element, k is ah^2/12
-					eit->Read(ahKey, k);
-					k.Power(2.);
-					k /= 12.;
-				}
+				eit->Read(kKey, k);
 				// compute
 				velo = 0.; grad = 0.;
 				eit->dN_AtBaryCenter(DERIV, 1U);

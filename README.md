@@ -24,3 +24,54 @@ of tensor permeabilty are:
 	+ Standardized file interfaces for application control and output
 	+ C++ and Python API for seamless integration
 
+
+# Running as an executable
+
+## The `JSON` settings file
+
+A minimal configuration looks like this:
+
+		{
+			"model":{
+				"file name": "debug",
+				"format": "icem"
+			},
+			"configuration": {
+				"matrix":{
+					"configuration": "uniform",
+					"permeability": 1.0E-15
+				},
+					"fractures":{
+						"configuration": "uniform",
+						"mechanical aperture": 0.0001, 
+						"hydraulic aperture": 0.0001
+				}
+			},
+			"analysis":{
+				"configuration": "uniform boundary distance",
+				"distance": 2.0
+			}
+		}
+
+This JSON object has three required subsections: `model`, `configuration` and `analysis`. We're going to look at the model
+section first
+
+### Loading a model
+
+The mininal `model` object loads a model from disk using a file name
+
+		"file name": "debug",
+		"format": "icem" # supports: "icem" and "csmp binary"
+
+For the `csmp binary` option, the model is loaded as a whole, assuming `debug.asc` and `debug.dat` present, the latter in binary mode.
+For the `icem` option, the model is loaded with all Ansys Icem families as csmp::Region, or csmp::Boundary. 
+An optional argument specifies a regions file to be used for the `"format": "icem"` case:
+
+		"regions file": "debug_r1"
+
+In this case, the file `debug_r1-regions.txt` is assumed to be present in the woking directory and loaded as csmp regions file.
+As a second option, a regions file can be generated for all regions specified in the configuration:
+
+		"regions": ["FRACTURES", "MATRIX"]
+
+This creates a temporary regions file that is being used when loading the Ansys model.

@@ -20,6 +20,23 @@ namespace csmp {
 		}
 
 
+		/**
+		Appends csmp customary `-regions.txt` to `fnamepref`.
+		*/
+		bool write_rfile(const char* fnamepref, const vector<string>& rnames)
+		{
+			auto fname = (string)fnamepref + "-regions.txt";
+			ofstream rfile(fname);
+			if (!rfile.is_open())
+				return false;
+			rfile << "regions file\nno properties\n";
+			for (const auto& rn : rnames)
+				rfile << rn << endl;
+			rfile.close();
+			return true;
+		}
+
+
 		/// Removes line element regions for 3D models
 		void cleanup(csmp::Model<3>& m)
 		{
@@ -46,6 +63,10 @@ namespace csmp {
 			"regions file": "rfile" 
 
 		has to be present. If not, all Icem families in the `.asc` file will be loaded as csmp::Region.
+		As an additional option, all regions to be included can be provided as a setting, in which case
+		a temporary regions file (`tmp-regions.txt`) will be created to load the model with:
+
+			"regions": ["MATRIX", "FRACTURES", "BOUNDARY1",...]
 		
 		## Option II (CSMP)
 
@@ -58,17 +79,23 @@ namespace csmp {
 		*/
 		unique_ptr<csmp::Model<3>> load_model(const Settings& s)
 			{
+				Settings ls(s.json); // local copy that is mutable
 				unique_ptr<csmp::Model<3>> pMod(nullptr);
 				const bool two_d = false;
-				const auto mfname = s.json["file name"].get<string>();
+				const auto mfname = ls.json["file name"].get<string>();
 				unique_ptr<csmp::PropertyDatabase<3>> pdb = property_database(two_d);
 				const char* vfname = "variables.txt";
 				if (!write_vfile(vfname, *pdb))
 					return pMod; // is null at this point
-				const auto option = s.json["format"].get<string>();
+				const auto option = ls.json["format"].get<string>();
+				if (ls.json.count("regions")) {
+					string temp_rfname = "tmp";
+					ls.json["regions file"] = temp_rfname;
+					write_rfile(temp_rfname.c_str(), ls.json["regions"].get<vector<string>>());
+				}
 				if (option == "icem") // icem (ansys) bin file based
-					if (s.json.count("regions file"))
-						pMod.reset(new ANSYS_Model3D(mfname.c_str(), s.json["regions file"].get<string>().c_str(), vfname, true, true, true));
+					if (ls.json.count("regions file"))
+						pMod.reset(new ANSYS_Model3D(mfname.c_str(), ls.json["regions file"].get<string>().c_str(), vfname, true, true, true));
 					else
 						pMod.reset(new ANSYS_Model3D(mfname.c_str(), vfname, true, true, false, true));
 				else if (option == "csmp binary") //csmp bin file based 

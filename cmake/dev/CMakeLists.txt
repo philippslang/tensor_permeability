@@ -16,7 +16,8 @@ INCLUDE_DIRECTORIES(${INCLUDE_DIRECTORIES} .
 										../../configurator/src
 										../../solver/src
 										../../analysis/src
-										../..)
+										../..
+										${EIGEN_DIR})
 
 SET (tensor_permeability_SRC 
 		../../src/ttrans_test.cpp

@@ -62,6 +62,8 @@ namespace csmp {
 
 			const std::vector<double>& raw() const { return t_; }
 
+			size_t dim() const { return d_; }
+
 		private:
 			size_t row_column_to_idx(size_t r, size_t c) const { return r*d_ + c; }
 

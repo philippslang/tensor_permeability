@@ -18,13 +18,13 @@ Pervasive assumptions throughout the application are
 - The variables that exist throughout the lifetime of the Model are (3D)
 		
 		// fluid pressure solver (internal)
-		conductivity	co	m2 Pa-1 s-1	3	1e-25	1	ELEMENT
+		conductivity	co	m2 Pa-1 s-1	3	1e-25	1	ELEMENT # m3/Pa.s for lo-dims, m2/Pa.s for eq-dim
 		fluid pressure	fl	Pa	1	-1e-05	1e+09	NODE
 		fluid volume source	fl	m3 s-1	1	-1	1	ELEMENT
 		// fractures only (user)
 		hydraulic aperture	hy	m	3	0	1	ELEMENT
 		mechanical aperture	me	m	1	0	1	ELEMENT
-		// matrix only (user)
+		// matrix and fractures
 		permeability	pe	m2	3	1e-25	1e-08	ELEMENT
 		// results (internal)
 		pressure gradient 0	pr	Pa m-1	2	-1e+20	1e+20	ELEMENT

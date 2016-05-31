@@ -32,16 +32,33 @@ namespace csmp {
 
 		/**
 		Assigns uniform transmissivity to all lower-dimensional elements in `Model`. Depending on the construction, this
-		either assigns the tensor as is or computes a projection.
+		either assigns the tensor as is or computes a projection. Relies on the following variables, which are set in here
+
+			hydraulic aperture	hy	m	3	0	1	ELEMENT
+			mechanical aperture	me	m	1	0	1	ELEMENT
+			conductivity	co	m2 Pa-1 s-1	3	1e-25	1	ELEMENT
+			permeability	pe	m2	3	1e-25	1e-08	ELEMENT
+
+		Assumes unit viscosity.
 		*/
 		bool UniformFractureConfigurator::configure(Model& model) const
 		{			
 			auto felmts = model.ElementsFrom(FractureElement<3>(false));
 			input_am(model, felmts);
 			const Index ahKey(model.Database().StorageKey("hydraulic aperture"));
-			if (!project_)
-				for (const auto& it : felmts)
+			const Index kKey(model.Database().StorageKey("permeability"));
+			const Index cKey(model.Database().StorageKey("conductivity"));
+			
+			if (!project_) {
+				TensorVariable<3> k(ah_), c(ah_);
+				k.Power(2.); k /= 12.;
+				c.Power(3.); c /= 12.;
+				for (const auto& it : felmts) {
 					it->Store(ahKey, ah_);
+					it->Store(kKey, k);
+					it->Store(cKey, c);
+				}
+			}
 			else
 				project_ah(model, felmts);
 			return true;
@@ -61,20 +78,28 @@ namespace csmp {
 		/// Projects (x-y) isotropic hydraulic aperture tensor, expects zero components except for ah_xx and ah_yy
 		void UniformFractureConfigurator::project_ah(Model& model, const std::vector<Element<3>*>& felmts) const
 		{
-			const Index ahKey(model.Database().StorageKey("hydraulic aperture"));
-			const TensorVariable<3> ah_loc(ah_);     // ah tensor in local coord sys
+			const array<Index, 3> keys = { Index(model.Database().StorageKey("hydraulic aperture")), 
+										   Index(model.Database().StorageKey("permeability")), 
+									       Index(model.Database().StorageKey("conductivity")) };
+			// corresponding to indices in keys
+			array<TensorVariable<3>, 3> ts_loc = { TensorVariable<3>(ah_), TensorVariable<3>(ah_), TensorVariable<3>(ah_) };
+			ts_loc[1].Power(2.); ts_loc[1] /= 12.; // m2
+			ts_loc[2].Power(3.); ts_loc[2] /= 12.; // m3 / Pa.s
 			// working variables
 			array<VectorVariable<3>, 3> eloc;        // element plane unit vectors w.r.t. glob coord-system
 			array<csmp::Point<3>, 3> pts;            // three points on fracture plane
-			TensorVariable<3> trans_tens, ah_glob;   // transformation tensor and element aperture in global coords
+			TensorVariable<3> trans_tens(PLAIN, 0.), // transformation tensor
+							  t_glob(PLAIN, 0.);     // and element prop in global coords
 			VectorVariable<3> dcosine;               // direction cosine 
-
+			// rotate and store
 			for (const auto& it : felmts) {
-				nd_coords(it, pts);      // get local nodes
-				local_uvecs(pts, eloc);  // get local unit vecs
-				trans_tensor(eloc, dcosine, trans_tens);   // transformation tensor
-				trans_tensor(trans_tens, ah_loc, ah_glob); // transforming local to global ah
-				it->Store(ahKey, ah_glob);                 // m
+				nd_coords(it, pts);                       // get local nodes
+				local_uvecs(pts, eloc);                   // get local unit vecs
+				trans_tensor(eloc, dcosine, trans_tens);  // transformation tensor
+				for (size_t i(0); i < keys.size(); ++i) {					
+					rot_tensor(trans_tens, ts_loc[i], t_glob);  // transforming local to global
+					it->Store(keys[i], t_glob);                 // store
+				}
 			}
 		}
 

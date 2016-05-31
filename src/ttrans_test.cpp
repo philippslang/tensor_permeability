@@ -19,19 +19,3 @@ TEST_CASE("tensor and vector transformations unit test") {
 }
 
 
-TEST_CASE("tensor rotation") {
-	const TensorVariable<3> rot_tens(PLAIN, 0., -1.0, 0., 1.0, 0., 0., 0., 0., 1.);
-	TensorVariable<3> var_loc(PLAIN, 1.0, 0.5, 0., 0., 0.5, 0., 0.2, 0., 0.);	
-	TensorVariable<3> var_glob_rot_pow, var_glob_pow_rot;
-	// transform then do mot
-	trans_tensor(rot_tens, var_loc, var_glob_rot_pow);
-	var_glob_rot_pow.Power(3.0);
-	var_glob_rot_pow /= 12.0;
-	// mod then transform
-	var_loc.Power(3.0);
-	var_loc /= 12.0;
-	trans_tensor(rot_tens, var_loc, var_glob_pow_rot);
-	// both ops should result in equal tensors
-	REQUIRE(var_glob_pow_rot == var_glob_rot_pow);
-}
-

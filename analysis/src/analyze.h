@@ -12,6 +12,9 @@ namespace csmp {
 		/// Computes upscaled permeability tensor 
 		UpscaledTensor analyze(const std::vector<FlowResults>&);
 
+		/// Computes eigen values and eigenvectors
+		bool eigen_values(const UpscaledTensor& t, std::vector<double>& evals, std::vector<std::vector<double>>& evecs);
+
 
 	} // !tperm
 } // !csmp

@@ -4,12 +4,36 @@
 #include "LUdcmp_Solver.h"
 #include "DenseMatrix.h"
 
+#include <Eigen/Dense>
+
 #include <numeric>
 
 using namespace std;
 
 namespace csmp {
 	namespace tperm {
+
+
+		bool eigen_values(const UpscaledTensor& t, vector<double>& evals, vector<vector<double>>& evecs)
+		{
+			typedef Eigen::Matrix<double, 3, 3> Matrix3d;
+			Matrix3d eigenKeff;
+			eigenKeff << t(0, 0), t(0, 1), t(0, 2), t(1, 0), t(1, 1), t(1, 2), t(2, 0), t(2, 1), t(2, 2);
+			Eigen::SelfAdjointEigenSolver<Matrix3d> eigensolver(eigenKeff);
+			if (eigensolver.info() != Eigen::Success)
+				return false;
+			//cout << "The eigenvalues of eigenKeff are:\n" << eigensolver.eigenvalues() << endl;
+			auto evals_em = eigensolver.eigenvalues();
+			auto evecs_em = eigensolver.eigenvectors();
+			evals = vector<double>(3, 0.);
+			for (size_t i(0); i < 3; ++i)
+				evals[i] = evals_em(i,0);
+			evecs = vector<vector<double>>(3, vector<double>(3, 0.));
+			for (size_t i(0); i < 3; ++i)
+				for (size_t j(0); j < 3; ++j)
+					evecs[i][j] = evecs_em(j, i);
+			return true;
+		}
 
 
 		/// Pseudo-inverse approach, 3D specialozed
@@ -82,16 +106,12 @@ namespace csmp {
 			// symmetry conditions
 			capacity(9, 1) = capacity(10, 2) = capacity(11, 5) = 1.;
 			capacity(9, 3) = capacity(10, 6) = capacity(11, 7) = -1;
-
 			// solving overdetermined system and initializing tensor
 			const double zero_lim(1.0E-25);
 			auto k = solve_overdet(capacity, u);
 			for (size_t i(0); i < d; ++i)
-				for (size_t j(0); j < d; ++j) {
-					if (abs(k[i*d + j])>zero_lim)
-						r(i, j) = k[i*d + j];
-				}
-			
+				for (size_t j(0); j < d; ++j)
+						r(i, j) = k[i*d + j];			
 			return r;
 		}
 

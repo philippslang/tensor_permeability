@@ -18,6 +18,9 @@ namespace csmp {
 		/// Returns FlowResults of the given region, as many as model dimensions
 		FlowResults fetch(size_t, const char*, const csmp::Model<3>&);
 
+		/// Assures symmetric tensor by averaging
+		UpscaledTensor post_process(const UpscaledTensor&);
+
 		
 	} // !tperm
 } // !csmp

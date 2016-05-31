@@ -4,7 +4,6 @@
 #include "bpreds.h"
 #include "analyze.h"
 
-#include <cmath>
 
 using namespace std;
 
@@ -12,19 +11,32 @@ namespace csmp {
 	namespace tperm{
 
 
+		UpscaledTensor post_process(const UpscaledTensor& raw)
+		{
+			const size_t d = raw.dim();
+			UpscaledTensor r(raw);
+			r(0, 1) = r(1, 0) = (r(0, 1) + r(1, 0)) / 2.;
+			if (d == 3) {
+				r(0, 2) = r(2, 0) = (r(0, 2) + r(2, 0)) / 2.;
+				r(1, 2) = r(2, 1) = (r(1, 2) + r(2, 1)) / 2.;
+			}
+			return r;
+		}
+
+
 		map<string, UpscaledTensor> fetch(const csmp::Model<3>& m, const char* rtag)
 		{
 			map<string, UpscaledTensor> r;
 			const size_t md = containsVolumeElements(m.Region("Model")) ? 3 : 2;
 			for (auto rit = m.RegionsBegin(); rit != m.RegionsEnd(); ++rit)
-			{
-				// is sampling region
+			{				
 				if (rit->first.find(rtag) == -1)
-					continue;
+					continue; // is sampling region
 				vector<FlowResults> fr;
 				for (size_t d(0); d < md; ++d)
 					fr.push_back(fetch(d, rit->first.c_str(), m));
-				auto ri = analyze(fr);
+				auto ri_raw = analyze(fr);
+				auto ri = post_process(ri_raw);
 				r.insert(std::make_pair(rit->first, ri));
 			}
 			return r;
@@ -67,10 +79,6 @@ namespace csmp {
 				else
 					evols[eid] = (*eit)->Volume()*(*eit)->Read(am_key);
 				(*eit)->Read(v_key, vvar);
-				if (isnan(evols[eid])) {
-					(*eit)->Out();
-					cin.get();
-				}
 				for (size_t id(0); id < md; ++id)
 					vel_comps[id][eid] = vvar(id);
 				(*eit)->Read(pg_key, vvar);

@@ -63,7 +63,7 @@ TEST_CASE("tensor extraction") {
 }
 
 
-TEST_CASE("flow tdd") {
+TEST_CASE("flow tdd minimal configuration") {
 	// generate settings
 	Settings s;
 	s.json = R"({
@@ -101,15 +101,73 @@ TEST_CASE("flow tdd") {
 	OmegaConfiguratorFactory ocf;
 	auto oconf = ocf.configurator(acs);
 
-	if (1) { 
+	if (0) { 
 		// load model...		
 		Settings ms(s.json["model"]);
 		auto model = load_model(ms);
 		// configure material properties
 		mconf->configure(*model);
 		fconf->configure(*model);
-		// compute conductivity
-		conductivity(*model);
+		// sort boundaries
+		auto bds = sort_boundaries(*model, s);
+		// ready to solve
+		solve(bds, *model);
+		// generate omegas
+		oconf->configure(*model);
+		// get upscaled tensors
+		auto omega_tensors = fetch(*model);
+		// report
+		report(omega_tensors, *model);
+	}
+}
+
+
+TEST_CASE("flow tdd extended configuration") {
+	// generate settings
+	Settings s;
+	s.json = R"({
+				 "model": {
+                     "file name": "debug",
+					 "format": "icem",
+					 "regions": ["CREATED_MATERIAL_9", "FRACTURES", "BOUNDARY1", "BOUNDARY2", "BOUNDARY3", "BOUNDARY4", "BOUNDARY5", "BOUNDARY6"]
+                 },
+				 "configuration": {
+				     "matrix":{
+				         "configuration": "uniform",
+						 "permeability": 1.0E-15
+					 },
+					 "fractures":{
+						 "configuration": "uniform",
+						 "mechanical aperture": 0.0001, 
+						 "hydraulic aperture": 0.0001
+					 }
+				 },
+				"analysis":{
+					"configuration": "uniform boundary distance",
+					"distance": 2.0
+				}
+				})"_json;
+
+	// get matrix configurator
+	Settings mcs(s.json["configuration"]["matrix"]);
+	MatrixConfiguratorFactory mcf;
+	auto mconf = mcf.configurator(mcs);
+	// get fracture configurator
+	Settings fcs(s.json["configuration"]["fractures"]);
+	FractureConfiguratorFactory fcf;
+	auto fconf = fcf.configurator(fcs);
+	// get omega generator
+	Settings acs(s.json["analysis"]);
+	OmegaConfiguratorFactory ocf;
+	auto oconf = ocf.configurator(acs);
+
+	if (1) {
+		// load model...		
+		Settings ms(s.json["model"]);
+		auto model = load_model(ms);
+		// configure material properties
+		mconf->configure(*model);
+		fconf->configure(*model);
 		// sort boundaries
 		auto bds = sort_boundaries(*model, s);
 		// ready to solve

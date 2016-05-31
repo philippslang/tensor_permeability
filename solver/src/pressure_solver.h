@@ -11,8 +11,6 @@ namespace csmp {
 		class Boundary;
 		class Boundaries;
 
-		/// Computes conductivity subsequently used in the solver
-		void conductivity(csmp::Model<3>&);
 
 		/// Solves pressure problem for all boundary pairs and stores in model
 		void solve(const Boundaries&, csmp::Model<3>&);

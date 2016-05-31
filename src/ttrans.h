@@ -45,7 +45,7 @@ namespace csmp {
 
 
 		/// Tensor rotation from tvar to tvart using ttrans
-		inline void trans_tensor(const TensorVariable<3>& ttrans, const TensorVariable<3>& tvar, TensorVariable<3>& tvart)
+		inline void rot_tensor(const TensorVariable<3>& ttrans, const TensorVariable<3>& tvar, TensorVariable<3>& tvart)
 		{
 			tvart = ttrans.Transposed()*tvar;
 			tvart *= ttrans;
