@@ -14,7 +14,7 @@ namespace csmp {
 		/// Computes upscaled permeability tensor 
 		void report(const std::map<std::string, UpscaledTensor>&, const Model<3>&, std::string fname = "");
 
-		void vtu(const std::map<std::string, UpscaledTensor>&, const Model<3>&, const char* fname = "results");
+		void vtu(const std::map<std::string, UpscaledTensor>&, const Model<3>&, const char* fname = "tensor_permeability");
 
 
 	} // !tperm

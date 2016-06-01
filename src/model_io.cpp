@@ -84,7 +84,7 @@ namespace csmp {
 				const bool two_d = false;
 				const auto mfname = ls.json["file name"].get<string>();
 				unique_ptr<csmp::PropertyDatabase<3>> pdb = property_database(two_d);
-				const char* vfname = "variables.txt";
+				const char* vfname = "tmp-variables.txt";
 				if (!write_vfile(vfname, *pdb))
 					return pMod; // is null at this point
 				const auto option = ls.json["format"].get<string>();

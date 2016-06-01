@@ -16,6 +16,7 @@ using json = nlohmann::json;
 namespace csmp {
 	namespace tperm {
 
+
 		void underline(string title, bool duscore)
 		{
 			cout << title << endl;
@@ -94,11 +95,10 @@ namespace csmp {
 		{
 			csmp::VTU_Interface<3> vtu(m);
 			vtu.OmitZeroInFileName(true);
-			set<string> oprops = { "permeability" };
-			vtu.OutputDataToVTU("tensor_permeability", list<string>(oprops.begin(), oprops.end()), "Model");
-			for (const auto& mit : omega_tensors) {
-				vtu.OutputDataToVTU("tensor_permeability", list<string>(oprops.begin(), oprops.end()), mit.first.c_str());
-			}
+			list<string> oprops = { "fluid pressure" };
+			vtu.OutputDataToVTU(fname, oprops);
+			for (const auto& mit : omega_tensors) 
+				vtu.OutputDataToVTU(fname, oprops, mit.first.c_str());
 		}
 
 
