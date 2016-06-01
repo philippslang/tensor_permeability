@@ -133,7 +133,6 @@ TEST_CASE("flow tdd extended configuration") {
                      "file name": "debug",
 					 "format": "icem",
 					 "regions": ["CREATED_MATERIAL_9", "FRACTURES", "BOUNDARY1", "BOUNDARY2", "BOUNDARY3", "BOUNDARY4", "BOUNDARY5", "BOUNDARY6"],
-					 "save final binary as": ""
                  },
 				 "configuration": {
 				     "matrix":{
@@ -183,10 +182,6 @@ TEST_CASE("flow tdd extended configuration") {
 		auto omega_tensors = fetch(*model);
 		// report results
 		report(omega_tensors, *model);
-		// output model
-		if (acs.json.count("save final binary"))
-			if (acs.json["save final binary"].get<string>() != "")
-				save_model(*model, acs.json["save final binary"].get<string>().c_str());
 	}
 }
 

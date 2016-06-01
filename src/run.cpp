@@ -18,7 +18,12 @@ using namespace std;
 namespace csmp {
 	namespace tperm {
 
-
+		/**
+		@todo JSON access errors lack specifier
+		@todo Minimal input OK check
+		@todo Clean up nested checks for optional JSON arguments
+		@todo Eigenvalues should be computed independent of json output, stored and used twice, for screen and file
+		*/
 		void run_from_file(const char* fn)
 		{
 			// load settings file
@@ -54,12 +59,20 @@ namespace csmp {
 			oconf->configure(*model);
 			// get upscaled tensors
 			auto omega_tensors = fetch(*model);
-			// report results
-			report(omega_tensors, *model);
-			// output model
-			if (acs.json.count("save final binary"))
-				if (acs.json["save final binary"].get<string>() != "")
-					save_model(*model, acs.json["save final binary"].get<string>().c_str());
+			// results
+			string jres_fname = "";
+			if (s.json.count("output")) {
+				Settings outs(s, "output");
+				if (outs.json.count("save final binary")) // write to csmp binary
+					if (outs.json["save final binary"].get<string>() != "")
+						save_model(*model, outs.json["save final binary"].get<string>().c_str());
+				if (outs.json.count("vtu")) // write to vtu
+					if (outs.json["vtu"].get<bool>())
+						vtu(omega_tensors, *model);
+				if (outs.json.count("results file name")) // write to json
+					jres_fname = s.json["output"]["results file name"].get<string>();
+			}			
+			report(omega_tensors, *model, jres_fname.c_str());			
 		}
 
 

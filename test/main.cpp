@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 	}
 	catch (std::exception& e)
 	{
-		std::cout << "Exception raised: " << e.what() << "\n\n";
+		std::cout << "\nException raised: " << e.what() << "\n\n";
 	}
 	return 0;
 }
