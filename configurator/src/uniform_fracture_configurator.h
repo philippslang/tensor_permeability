@@ -22,10 +22,9 @@ namespace csmp {
 
 			virtual bool configure(Model&) const;
 
-		private:
-			
-			void input_am(Model&, const std::vector<Element<3>*>&) const;
-			void project_ah(Model&, const std::vector<Element<3>*>&) const;
+		protected:			
+			void input_am(Model&, const std::vector<Element<3>*>&, double) const;
+			void project_ah(Model&, const std::vector<Element<3>*>&, const csmp::TensorVariable<3>&) const;
 
 			const bool project_; ///< Hydraulic aperture is isotropic (only ah_xx and ah_yy set) and needs projection
 			const double am_;

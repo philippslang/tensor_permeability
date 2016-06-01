@@ -34,10 +34,10 @@ namespace csmp {
 
 		Returns a null tensor if settings invalid.
 		*/
-		csmp::TensorVariable<3> tensor(const char* vname, const Settings& s)
+		csmp::TensorVariable<3> tensor(const char* entry, const Settings& s)
 		{
 			TensorVariable<3> t(PLAIN, 0.);
-			const auto j = s.json[vname];
+			const auto j = s.json[entry];
 			const size_t si = j.size();
 			if (si == 1)
 				t(0, 0) = t(1, 1) = t(2, 2) = j.get<double>();
@@ -47,7 +47,7 @@ namespace csmp {
 			else if (si == 9)
 				for (size_t i(0); i < 3; ++i)
 					for (size_t k(0); k < 3; ++k)
-					t(i, k) = j[i*3+k].get<double>();
+						t(i, k) = j[i*3+k].get<double>();
 			return t;
 		}
 

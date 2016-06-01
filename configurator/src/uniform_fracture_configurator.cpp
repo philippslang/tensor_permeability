@@ -44,7 +44,7 @@ namespace csmp {
 		bool UniformFractureConfigurator::configure(Model& model) const
 		{			
 			auto felmts = model.ElementsFrom(FractureElement<3>(false));
-			input_am(model, felmts);
+			input_am(model, felmts, am_);
 			const Index ahKey(model.Database().StorageKey("hydraulic aperture"));
 			const Index kKey(model.Database().StorageKey("permeability"));
 			const Index cKey(model.Database().StorageKey("conductivity"));
@@ -60,29 +60,29 @@ namespace csmp {
 				}
 			}
 			else
-				project_ah(model, felmts);
+				project_ah(model, felmts, ah_);
 			return true;
 		}
 
 
 		/// Inputs mechanical aperture
-		void UniformFractureConfigurator::input_am(Model& model, const std::vector<Element<3>*>& felmts) const
+		void UniformFractureConfigurator::input_am(Model& model, const std::vector<Element<3>*>& felmts, double a) const
 		{
 			const Index amKey(model.Database().StorageKey("mechanical aperture"));
-			const ScalarVariable am(PLAIN, am_);
+			const ScalarVariable am(PLAIN, a);
 			for (const auto& it : felmts)
 				it->Store(amKey, am);				
 		}
 
 
 		/// Projects (x-y) isotropic hydraulic aperture tensor, expects zero components except for ah_xx and ah_yy
-		void UniformFractureConfigurator::project_ah(Model& model, const std::vector<Element<3>*>& felmts) const
+		void UniformFractureConfigurator::project_ah(Model& model, const std::vector<Element<3>*>& felmts, const csmp::TensorVariable<3>& ah) const
 		{
 			const array<Index, 3> keys = { Index(model.Database().StorageKey("hydraulic aperture")), 
 										   Index(model.Database().StorageKey("permeability")), 
 									       Index(model.Database().StorageKey("conductivity")) };
 			// corresponding to indices in keys
-			array<TensorVariable<3>, 3> ts_loc = { TensorVariable<3>(ah_), TensorVariable<3>(ah_), TensorVariable<3>(ah_) };
+			array<TensorVariable<3>, 3> ts_loc = { TensorVariable<3>(ah), TensorVariable<3>(ah), TensorVariable<3>(ah) };
 			ts_loc[1].Power(2.); ts_loc[1] /= 12.; // m2
 			ts_loc[2].Power(3.); ts_loc[2] /= 12.; // m3 / Pa.s
 			// working variables

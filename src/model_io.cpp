@@ -79,7 +79,7 @@ namespace csmp {
 		*/
 		unique_ptr<csmp::Model<3>> load_model(const Settings& s)
 			{
-				Settings ls(s.json); // local copy that is mutable
+				Settings ls(s); // local copy that is mutable
 				unique_ptr<csmp::Model<3>> pMod(nullptr);
 				const bool two_d = false;
 				const auto mfname = ls.json["file name"].get<string>();
@@ -132,6 +132,13 @@ namespace csmp {
 				pPdb->AddProperty(pn.c_str(), "Pa m-1", VECTOR, ELEMENT, -1.0E+20, 1.0E+20);
 			}
 			return pPdb;
+		}
+
+
+		bool save_model(const csmp::Model<3>& m, const char* bfname)
+		{
+			m.OutputToDisk(bfname);
+			return true;
 		}
 
 

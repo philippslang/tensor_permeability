@@ -27,6 +27,9 @@ namespace csmp {
 		/// Generates app specific property database
 		std::unique_ptr<csmp::PropertyDatabase<3>> property_database(bool two_d);
 
+		/// Saves csmp::Model to native bindary
+		bool save_model(const csmp::Model<3>&, const char*);
+
 	} // !tperm
 } // !csmp
 

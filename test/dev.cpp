@@ -20,10 +20,13 @@ using namespace csmp::tperm;
 using namespace std;
 
 
+#define TP_EXTENDED_TESTS 1
+
+
 TEST_CASE("reading base configuration file") {
 	std::ifstream f("config.json");
 	Settings s;
-	CHECK_NOTHROW(s.json << f);
+	REQUIRE_NOTHROW(s.json << f);
 	f.close();
 	auto jconfig = s.json["configuration"];
 	REQUIRE(jconfig["matrix"]["configuration"].get<string>() == string("uniform"));
@@ -89,21 +92,21 @@ TEST_CASE("flow tdd minimal configuration") {
 				})"_json;
 
 	// get matrix configurator
-	Settings mcs(s.json["configuration"]["matrix"]);
+	Settings mcs(Settings(s, "configuration"), "matrix");
 	MatrixConfiguratorFactory mcf;
 	auto mconf = mcf.configurator(mcs);
 	// get fracture configurator
-	Settings fcs(s.json["configuration"]["fractures"]);
+	Settings fcs(Settings(s, "configuration"), "fractures");
 	FractureConfiguratorFactory fcf;
 	auto fconf = fcf.configurator(fcs);
 	// get omega generator
-	Settings acs(s.json["analysis"]);
+	Settings acs(s, "analysis");
 	OmegaConfiguratorFactory ocf;
 	auto oconf = ocf.configurator(acs);
 
 	if (0) { 
 		// load model...		
-		Settings ms(s.json["model"]);
+		Settings ms(s, "model");
 		auto model = load_model(ms);
 		// configure material properties
 		mconf->configure(*model);
@@ -129,7 +132,8 @@ TEST_CASE("flow tdd extended configuration") {
 				 "model": {
                      "file name": "debug",
 					 "format": "icem",
-					 "regions": ["CREATED_MATERIAL_9", "FRACTURES", "BOUNDARY1", "BOUNDARY2", "BOUNDARY3", "BOUNDARY4", "BOUNDARY5", "BOUNDARY6"]
+					 "regions": ["CREATED_MATERIAL_9", "FRACTURES", "BOUNDARY1", "BOUNDARY2", "BOUNDARY3", "BOUNDARY4", "BOUNDARY5", "BOUNDARY6"],
+					 "save final binary as": ""
                  },
 				 "configuration": {
 				     "matrix":{
@@ -143,27 +147,27 @@ TEST_CASE("flow tdd extended configuration") {
 					 }
 				 },
 				"analysis":{
-					"configuration": "uniform boundary distance",
-					"distance": 2.0
+					"configuration": "bounding box",
+					"corner points": [[[-3.0,-3.0,2.0],[3.0,3.0,8.0]], [[-2.0,-2.0,3.0],[2.0,2.0,7.0]]]
 				}
 				})"_json;
 
 	// get matrix configurator
-	Settings mcs(s.json["configuration"]["matrix"]);
+	Settings mcs(Settings(s, "configuration"), "matrix");
 	MatrixConfiguratorFactory mcf;
 	auto mconf = mcf.configurator(mcs);
 	// get fracture configurator
-	Settings fcs(s.json["configuration"]["fractures"]);
+	Settings fcs(Settings(s, "configuration"), "fractures");
 	FractureConfiguratorFactory fcf;
 	auto fconf = fcf.configurator(fcs);
 	// get omega generator
-	Settings acs(s.json["analysis"]);
+	Settings acs(s, "analysis");
 	OmegaConfiguratorFactory ocf;
 	auto oconf = ocf.configurator(acs);
 
 	if (1) {
 		// load model...		
-		Settings ms(s.json["model"]);
+		Settings ms(s, "model");
 		auto model = load_model(ms);
 		// configure material properties
 		mconf->configure(*model);
@@ -176,8 +180,12 @@ TEST_CASE("flow tdd extended configuration") {
 		oconf->configure(*model);
 		// get upscaled tensors
 		auto omega_tensors = fetch(*model);
-		// report
+		// report results
 		report(omega_tensors, *model);
+		// output model
+		if (acs.json.count("save final binary"))
+			if (acs.json["save final binary"].get<string>() != "")
+				save_model(*model, acs.json["save final binary"].get<string>().c_str());
 	}
 }
 

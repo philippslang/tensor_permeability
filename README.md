@@ -52,9 +52,12 @@ A minimal configuration looks like this:
 				"distance": 2.0
 			}
 		}
+		
+Attention: Floating point values have to include a decimal value, i.e., we must write `1.0` and not `1.`. This is a `JSON`
+convention.
 
 This JSON object has three required subsections: `model`, `configuration` and `analysis`. We're going to look at the model
-section first
+section first.
 
 ### Loading a model
 

@@ -48,9 +48,11 @@ namespace csmp {
 				if (dmin >= dist_)
 					omega_ids.push_back(eit->Idx());
 			}
-			if (omega_ids.size())
+			if (omega_ids.size()) {
 				m.FormRegionFrom("omega", omega_ids);
-			return true;
+				return true;
+			}
+			return false;
 		}
 
 

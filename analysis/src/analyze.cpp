@@ -107,7 +107,6 @@ namespace csmp {
 			capacity(9, 1) = capacity(10, 2) = capacity(11, 5) = 1.;
 			capacity(9, 3) = capacity(10, 6) = capacity(11, 7) = -1;
 			// solving overdetermined system and initializing tensor
-			const double zero_lim(1.0E-25);
 			auto k = solve_overdet(capacity, u);
 			for (size_t i(0); i < d; ++i)
 				for (size_t j(0); j < d; ++j)

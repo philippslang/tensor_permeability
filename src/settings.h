@@ -3,16 +3,30 @@
 
 #include "json.hpp"
 
+#include <exception>
+#include <string>
+
 namespace csmp {
 	namespace tperm {
+
+
+		/// Exception for wrong json access request
+		class json_null : public std::exception
+		{
+			const char* miss_obj_name_;
+		public:
+			explicit json_null(const char* missing_object) : miss_obj_name_(missing_object) {}
+			virtual const char* what() const throw() { return std::string("JSON object " + (std::string)miss_obj_name_ + " doesn't exist").c_str(); }
+		};
 
 
 		/// JSON Container for application settings
 		class Settings
 		{
 		public:
-			Settings();
-			explicit Settings(nlohmann::json);
+			Settings() noexcept;
+			/// Throws if not available
+			Settings(const Settings&, const char* sub_object);
 
 			nlohmann::json json;
 		};
