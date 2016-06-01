@@ -20,14 +20,12 @@ INCLUDE_DIRECTORIES(${INCLUDE_DIRECTORIES} .
 										${EIGEN_DIR})
 
 SET (tensor_permeability_SRC 
-		../../src/ttrans_test.cpp
 		../../src/settings.cpp
-		../../src/settings_test.cpp
 		../../src/configurator.cpp
 		../../src/configurator_factory.cpp
 		../../src/model_io.cpp
 		../../test/main.cpp
-		../../test/dev.cpp
+		../../src/run.cpp
 		../../analysis/src/report.cpp
 		../../analysis/src/fetch.cpp
 		../../analysis/src/analyze.cpp
@@ -44,6 +42,33 @@ SET (tensor_permeability_SRC
 		../../configurator/src/uniform_fracture_configurator.cpp
 		../../configurator/src/regional_uniform_fracture_configurator.cpp)
 
+SET (tensor_permeability_test_SRC 
+		../../src/ttrans_test.cpp
+		../../src/settings.cpp
+		../../src/settings_test.cpp
+		../../src/configurator.cpp
+		../../src/configurator_factory.cpp
+		../../src/model_io.cpp
+		../../test/main.cpp
+		../../test/dev.cpp
+		../../src/run.cpp
+		../../analysis/src/report.cpp
+		../../analysis/src/fetch.cpp
+		../../analysis/src/analyze.cpp
+		../../analysis/src/results.cpp
+		../../analysis/src/omega_configurator_factory.cpp
+		../../analysis/src/omega_bdistance_configurator.cpp
+		../../analysis/src/omega_corner_points_configurator.cpp
+		../../solver/src/pressure_solver.cpp
+		../../solver/src/boundaries.cpp
+		../../solver/src/sort_boundaries.cpp
+		../../configurator/src/matrix_configurator_factory.cpp
+		../../configurator/src/fracture_configurator_factory.cpp
+		../../configurator/src/uniform_matrix_configurator.cpp
+		../../configurator/src/uniform_fracture_configurator.cpp
+		../../configurator/src/regional_uniform_fracture_configurator.cpp)
+
+
 SET (tensor_permeability_HEADER
 		../../src/bpreds.h
 		../../src/elops.h
@@ -52,6 +77,32 @@ SET (tensor_permeability_HEADER
 		../../src/configurator.h
 		../../src/configurator_factory.h
 		../../src/model_io.h
+		../../src/run.h
+		../../analysis/src/report.h
+		../../analysis/src/fetch.h
+		../../analysis/src/analyze.h
+		../../analysis/src/results.h
+		../../analysis/src/omega_configurator_factory.h
+		../../analysis/src/omega_corner_points_configurator.h
+		../../analysis/src/omega_bdistance_configurator.h
+		../../solver/src/pressure_solver.h
+		../../solver/src/boundaries.h
+		../../solver/src/sort_boundaries.h
+		../../configurator/src/matrix_configurator_factory.h
+		../../configurator/src/fracture_configurator_factory.h
+		../../configurator/src/uniform_matrix_configurator.h
+		../../configurator/src/uniform_fracture_configurator.h
+		../../configurator/src/regional_uniform_fracture_configurator.h)
+
+SET (tensor_permeability_test_HEADER
+		../../src/bpreds.h
+		../../src/elops.h
+		../../src/ttrans.h
+		../../src/settings.h
+		../../src/configurator.h
+		../../src/configurator_factory.h
+		../../src/model_io.h
+		../../src/run.h
 		../../analysis/src/report.h
 		../../analysis/src/fetch.h
 		../../analysis/src/analyze.h

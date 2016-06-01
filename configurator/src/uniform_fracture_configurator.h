@@ -16,20 +16,26 @@ namespace csmp {
 		public:
 			UniformFractureConfigurator() = delete;
 			/// Allowing for full tensor to be specified
-			UniformFractureConfigurator(const csmp::TensorVariable<3>&, double);
+			UniformFractureConfigurator(const csmp::TensorVariable<3>& ah, 
+										const csmp::TensorVariable<3>& k,
+										const csmp::TensorVariable<3>& c,
+										double am);
 			/// Spherical tensor, i.e. isotropic transmissivity
-			UniformFractureConfigurator(double, double);
+			UniformFractureConfigurator(double ah, double am);
 
 			virtual bool configure(Model&) const;
 
 		protected:			
 			void input_am(Model&, const std::vector<Element<3>*>&, double) const;
 			void project_ah(Model&, const std::vector<Element<3>*>&, const csmp::TensorVariable<3>&) const;
-			void direct_ah(Model&, const std::vector<Element<3>*>&, const csmp::TensorVariable<3>&) const;
+			void direct_ah(Model&m, const std::vector<Element<3>*>&,
+						   const csmp::TensorVariable<3>& ah, 
+						   const csmp::TensorVariable<3>& k, 
+						   const csmp::TensorVariable<3>& c) const;
 
 			const bool project_; ///< Hydraulic aperture is isotropic (only ah_xx and ah_yy set) and needs projection
 			const double am_;
-			const csmp::TensorVariable<3> ah_;
+			const csmp::TensorVariable<3> ah_, k_, c_;
 		};
 
 		/** \class UniformFractureConfigurator
@@ -43,7 +49,7 @@ namespace csmp {
 
 			hydraulic aperture	hy	m	3	0	1	ELEMENT
 			mechanical aperture	me	m	1	0	1	ELEMENT
-			conductivity	co	m2 Pa-1 s-1	3	1e-25	1	ELEMENT
+			conductivity	co	m2 Pa-1 s-1	3	1e-25	1	ELEMENT # m3 / Pa.s for fractures
 			permeability	pe	m2	3	1e-25	1e-08	ELEMENT
 		*/
 

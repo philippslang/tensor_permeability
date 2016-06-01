@@ -15,7 +15,9 @@ namespace csmp {
 		public:
 			RegionalUniformFractureConfigurator() = delete;
 			/// Allowing for full tensor to be specified
-			RegionalUniformFractureConfigurator(const std::vector<csmp::TensorVariable<3>>& ahs, 
+			RegionalUniformFractureConfigurator(const std::vector<csmp::TensorVariable<3>>& ahs,
+												const std::vector<csmp::TensorVariable<3>>& ks, 
+												const std::vector<csmp::TensorVariable<3>>& cs,
 												const std::vector<double>& ams,
 												const std::vector<std::string>& rnames);
 			/// Spherical tensor, i.e. isotropic transmissivity
@@ -26,10 +28,10 @@ namespace csmp {
 			virtual bool configure(Model&) const;
 
 		private:
-			void check_vsize() const;
-			const std::vector<std::string> frnames_;
+			void check_vsize() const;			
 			const std::vector<double> ams_;
-			std::vector<csmp::TensorVariable<3>> ahs_;
+			const std::vector<std::string> frnames_;
+			std::vector<csmp::TensorVariable<3>> ahs_, ks_, cs_;
 		};
 
 		/** \class RegionalUniformFractureConfigurator

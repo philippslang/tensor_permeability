@@ -4,6 +4,7 @@
 #define TP_CONFIGFACT_H
 
 #include <memory>
+#include <vector>
 
 namespace csmp {
 	template<size_t> class TensorVariable;
@@ -30,6 +31,9 @@ namespace csmp {
 
 		/// Generates a tensor from a tperm::Settings entry
 		csmp::TensorVariable<3> tensor(const char* vname, const Settings&);
+
+		/// Generates a tensor from a vector
+		csmp::TensorVariable<3> tensor(const std::vector<double>&);
 
 	} // !tperm
 } // !csmp

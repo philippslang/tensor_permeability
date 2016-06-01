@@ -1,5 +1,6 @@
 #include "fracture_configurator_factory.h"
 #include "uniform_fracture_configurator.h"
+#include "regional_uniform_fracture_configurator.h"
 #include "settings.h"
 #include <string>
 #include <TensorVariable.h>
@@ -32,11 +33,29 @@ namespace csmp {
 			if (c == string("uniform")) {
 				const double am = s.json["mechanical aperture"].get<double>();
 				if (s.json["hydraulic aperture"].size() == 9) // tensor
-					pConf.reset(new UniformFractureConfigurator(tensor("hydraulic aperture", s), am));
+					pConf.reset(new UniformFractureConfigurator(tensor("hydraulic aperture", s),
+																tensor("permeability", s), 
+																tensor("conductivity", s),
+																am));
 				else // scalar
 					pConf.reset(new UniformFractureConfigurator(s.json["hydraulic aperture"].get<double>(), am));
 			}
-			else if (0) {
+			else if (c == string("regional uniform")) {
+				const auto ams = s.json["mechanical aperture"].get<vector<double>>();
+				const auto frnames = s.json["region names"].get<vector<string>>();
+				if (s.json.count("permeability")) { // tensor
+					vector<string> props = { "hydraulic aperture" , "permeability", "conductivity" };
+					vector<vector<TensorVariable<3>>> vals(props.size(), vector<TensorVariable<3>>(ams.size(), TensorVariable<3>()));
+					for (size_t i(0); i < props.size(); ++i) {
+						auto jvals = s.json[props[i].c_str()].get<vector<vector<double>>>();
+						for (size_t j(0); j < ams.size(); ++j)
+							vals[i][j] = tensor(jvals.at(j));
+					}
+					pConf.reset(new RegionalUniformFractureConfigurator(vals.at(0), vals.at(1), vals.at(2), ams, frnames));
+				}
+				else // scalar
+					pConf.reset(new RegionalUniformFractureConfigurator(s.json["hydraulic aperture"].get<vector<double>>(), 
+																		ams, frnames));
 			}
 			return pConf;
 		}

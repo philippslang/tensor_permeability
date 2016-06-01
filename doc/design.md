@@ -43,5 +43,6 @@ The variable `permeability` is only initialized for the matrix of the model
 @todo Check that tensor trans is ok
 @todo consolidate 2D criterion to function
 @todo need an exception and log policy
+@todo rounding policy for json output
 @todo 2D support, highlight whats not ready with todos
 @todo Internal boundaries, means regions. requires a keyword to set elements cond to zero and not include in fracs output

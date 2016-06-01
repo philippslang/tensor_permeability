@@ -14,8 +14,11 @@ namespace csmp {
 		orientation in space. The tensor needs to reflect that the fractre normal direction aperture is zero, and that the eigenvalues
 		are aligned in the fracture plane, plus the unormal.
 		*/
-		UniformFractureConfigurator::UniformFractureConfigurator(const csmp::TensorVariable<3>& ah, double am)
-			: Configurator(), ah_(ah), am_(am), project_(false)
+		UniformFractureConfigurator::UniformFractureConfigurator(const csmp::TensorVariable<3>& ah,
+																 const csmp::TensorVariable<3>& k, 
+																 const csmp::TensorVariable<3>& c, 
+																 double am)
+			: Configurator(), project_(false), am_(am), ah_(ah), k_(k), c_(c)
 		{
 		}
 
@@ -47,7 +50,7 @@ namespace csmp {
 
 			input_am(model, felmts, am_);			
 			if (!project_) 
-				direct_ah(model, felmts, ah_);
+				direct_ah(model, felmts, ah_, k_, c_);
 			else
 				project_ah(model, felmts, ah_);
 
@@ -65,16 +68,15 @@ namespace csmp {
 		}
 
 
-		/// Projects (x-y) isotropic hydraulic aperture tensor, expects zero components except for ah_xx and ah_yy
-		void UniformFractureConfigurator::direct_ah(Model& model, const std::vector<Element<3>*>& felmts, const csmp::TensorVariable<3>& ah) const
+		/// Projects (x-y) isotropic hydraulic aperture, permeability and conductivity tensor, expects zero components except for ah_xx and ah_yy
+		void UniformFractureConfigurator::direct_ah(Model& model, const std::vector<Element<3>*>& felmts, 
+													const csmp::TensorVariable<3>& ah,
+													const csmp::TensorVariable<3>& k, 
+													const csmp::TensorVariable<3>& c) const
 		{
 			const Index ahKey(model.Database().StorageKey("hydraulic aperture"));
 			const Index kKey(model.Database().StorageKey("permeability"));
 			const Index cKey(model.Database().StorageKey("conductivity"));
-
-			TensorVariable<3> k(ah), c(ah);
-			k.Power(2.); k /= 12.;
-			c.Power(3.); c /= 12.;
 			for (const auto& it : felmts) {
 				it->Store(ahKey, ah);
 				it->Store(kKey, k);

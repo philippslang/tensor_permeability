@@ -67,6 +67,7 @@ namespace csmp {
 
 
 		/**
+		Dispatches between MGMRES and SAMG based on system size.
 		Relies on the following variables:
 
 			\code
@@ -78,15 +79,19 @@ namespace csmp {
 			fluid volume source	fl	m3 s-1	1	-1	1	ELEMENT
 			\endcode
 
-		@todo Alternative small budget solver
+		@todo Let user choose solver
 		*/
 		void solve_pressure(csmp::Model<3>& m)
 		{
 			SAMG_Settings samg_settings;
-			//SAMG_Solver lin_solver(&samg_settings);	
-MGMRES_Solver lin_solver(1.0E-9, 1.0E-8, 1000, 1);
+			unique_ptr<csmp::Solver> sPtr(nullptr);	
+			if (m.Region("Model").Elements() < 25000)
+				sPtr.reset(new MGMRES_Solver(1.0E-9, 1.0E-8, 1000, 10));
+			else
+				sPtr.reset(new SAMG_Solver(&samg_settings));
 
-			PDE_Integrator<3, Region> ssfp(&lin_solver);
+
+			PDE_Integrator<3, Region> ssfp(sPtr.get());
 			// conductance matrix [K] on the left-hand side
 			NumIntegral_dNT_op_dN_dV<3> conductance(m.Database(), "conductivity", "fluid pressure", "fluid pressure");
 			// source vector {Q} on the right-hand side

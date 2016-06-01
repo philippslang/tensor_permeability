@@ -20,7 +20,7 @@ using namespace csmp::tperm;
 using namespace std;
 
 
-#define TP_EXTENDED_TESTS 1
+#define TP_EXTENDED_TESTS 0
 
 
 TEST_CASE("reading base configuration file") {
@@ -104,7 +104,7 @@ TEST_CASE("flow tdd minimal configuration") {
 	OmegaConfiguratorFactory ocf;
 	auto oconf = ocf.configurator(acs);
 
-	if (0) { 
+	if (TP_EXTENDED_TESTS) {
 		// load model...		
 		Settings ms(s, "model");
 		auto model = load_model(ms);
@@ -141,9 +141,10 @@ TEST_CASE("flow tdd extended configuration") {
 						 "permeability": 1.0E-15
 					 },
 					 "fractures":{
-						 "configuration": "uniform",
-						 "mechanical aperture": 0.0001, 
-						 "hydraulic aperture": 0.0001
+						 "configuration": "regional uniform",
+						 "region names": ["FRACTURES"],
+						 "mechanical aperture": [0.0001], 
+						 "hydraulic aperture": [0.0001]
 					 }
 				 },
 				"analysis":{
@@ -165,7 +166,7 @@ TEST_CASE("flow tdd extended configuration") {
 	OmegaConfiguratorFactory ocf;
 	auto oconf = ocf.configurator(acs);
 
-	if (1) {
+	if (TP_EXTENDED_TESTS) {
 		// load model...		
 		Settings ms(s, "model");
 		auto model = load_model(ms);
