@@ -44,23 +44,13 @@ namespace csmp {
 		bool UniformFractureConfigurator::configure(Model& model) const
 		{			
 			auto felmts = model.ElementsFrom(FractureElement<3>(false));
-			input_am(model, felmts, am_);
-			const Index ahKey(model.Database().StorageKey("hydraulic aperture"));
-			const Index kKey(model.Database().StorageKey("permeability"));
-			const Index cKey(model.Database().StorageKey("conductivity"));
-			
-			if (!project_) {
-				TensorVariable<3> k(ah_), c(ah_);
-				k.Power(2.); k /= 12.;
-				c.Power(3.); c /= 12.;
-				for (const auto& it : felmts) {
-					it->Store(ahKey, ah_);
-					it->Store(kKey, k);
-					it->Store(cKey, c);
-				}
-			}
+
+			input_am(model, felmts, am_);			
+			if (!project_) 
+				direct_ah(model, felmts, ah_);
 			else
 				project_ah(model, felmts, ah_);
+
 			return true;
 		}
 
@@ -72,6 +62,24 @@ namespace csmp {
 			const ScalarVariable am(PLAIN, a);
 			for (const auto& it : felmts)
 				it->Store(amKey, am);				
+		}
+
+
+		/// Projects (x-y) isotropic hydraulic aperture tensor, expects zero components except for ah_xx and ah_yy
+		void UniformFractureConfigurator::direct_ah(Model& model, const std::vector<Element<3>*>& felmts, const csmp::TensorVariable<3>& ah) const
+		{
+			const Index ahKey(model.Database().StorageKey("hydraulic aperture"));
+			const Index kKey(model.Database().StorageKey("permeability"));
+			const Index cKey(model.Database().StorageKey("conductivity"));
+
+			TensorVariable<3> k(ah), c(ah);
+			k.Power(2.); k /= 12.;
+			c.Power(3.); c /= 12.;
+			for (const auto& it : felmts) {
+				it->Store(ahKey, ah);
+				it->Store(kKey, k);
+				it->Store(cKey, c);
+			}
 		}
 
 

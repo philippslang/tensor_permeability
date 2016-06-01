@@ -21,7 +21,7 @@ namespace csmp {
 		RegionalUniformFractureConfigurator::RegionalUniformFractureConfigurator(const vector<csmp::TensorVariable<3>>& ahs,
 																				 const vector<double>& ams,
 																				 const vector<string>& rnames)
-			: UniformFractureConfigurator(0.,0.), ahs_(ahs), ams_(ams), frnames_(rnames)
+			: UniformFractureConfigurator(csmp::TensorVariable<3>(PLAIN, 0.), 0.), ahs_(ahs), ams_(ams), frnames_(rnames)
 		{
 			check_vsize();
 		}
@@ -34,7 +34,7 @@ namespace csmp {
 		RegionalUniformFractureConfigurator::RegionalUniformFractureConfigurator(const vector<double>& ahs,
 																				 const vector<double>& ams,
 																				 const vector<string>& rnames)
-			: UniformFractureConfigurator(csmp::TensorVariable<3>(PLAIN, 0.), 0.), ahs_(ahs.size(), this->ah_), ams_(ams), frnames_(rnames)
+			: UniformFractureConfigurator(0., 0.), ahs_(ahs.size(), this->ah_), ams_(ams), frnames_(rnames)
 		{
 			for (size_t i(0); i < ahs.size(); ++i)
 				ahs_[i] = csmp::TensorVariable<3>(PLAIN, ahs[i], 0., 0., 0., ahs[i], 0., 0., 0., 0.);
@@ -64,7 +64,12 @@ namespace csmp {
 		bool RegionalUniformFractureConfigurator::configure(Model& model) const
 		{			
 			for (size_t r(0); r < ahs_.size(); ++r) {
-				
+				auto felmts = model.ElementsFrom(FractureElement<3>(false), frnames_[r].c_str());
+				input_am(model, felmts, ams_[r]);
+				if (!this->project_)
+					direct_ah(model, felmts, ahs_[r]);
+				else
+					project_ah(model, felmts, ahs_[r]);
 			}
 			return true;
 		}
