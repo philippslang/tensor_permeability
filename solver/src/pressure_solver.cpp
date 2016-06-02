@@ -1,6 +1,7 @@
 #include "pressure_solver.h"
 #include "boundaries.h"
 #include "bpreds.h"
+#include "defs.h"
 
 #include "Model.h"
 #include "SAMG_Solver.h"
@@ -85,11 +86,14 @@ namespace csmp {
 		{
 			SAMG_Settings samg_settings;
 			unique_ptr<csmp::Solver> sPtr(nullptr);	
+#ifdef LINK_SAMG
 			if (m.Region("Model").Elements() < 25000)
 				sPtr.reset(new MGMRES_Solver(1.0E-9, 1.0E-8, 1000, 10));
 			else
 				sPtr.reset(new SAMG_Solver(&samg_settings));
-
+#else
+			sPtr.reset(new MGMRES_Solver(1.0E-9, 1.0E-8, 1000, 10));
+#endif
 
 			PDE_Integrator<3, Region> ssfp(sPtr.get());
 			// conductance matrix [K] on the left-hand side

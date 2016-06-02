@@ -70,6 +70,7 @@ SET (tensor_permeability_test_SRC
 
 
 SET (tensor_permeability_HEADER
+		../../src/defs.h
 		../../src/bpreds.h
 		../../src/elops.h
 		../../src/ttrans.h
@@ -95,6 +96,7 @@ SET (tensor_permeability_HEADER
 		../../configurator/src/regional_uniform_fracture_configurator.h)
 
 SET (tensor_permeability_test_HEADER
+		../../src/defs.h
 		../../src/bpreds.h
 		../../src/elops.h
 		../../src/ttrans.h
