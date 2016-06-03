@@ -405,3 +405,9 @@ A complete account of the upscaling results is output in `results.json`:
 				}
 			}
 		}
+		
+and an ellipsoid visualization of the `omega` corresponding tensors looks like this for `omega_0` and `omega_2`, respectively
+
+![Fracs 2000 O1](https://raw.githubusercontent.com/plang85/tensor_permeability/master/doc/fracs2000_keff_ellipsoid_0.png) ![Fracs 2000 O1](https://raw.githubusercontent.com/plang85/tensor_permeability/master/doc/fracs2000_keff_ellipsoid_1.png)
+
+
