@@ -264,3 +264,67 @@ The `output` section contains a complete description of available outputs:
 
 A results summary will be written to `results.json` (`"results file name": "results.json"`), and visual outputs will be made for the entire model and all `omega`
 regions (`"vtu": true`) and additionally for the regions "FRACTURE_1" and "FRACTURE_2" (`"vtu regions": ["FRACTURE_1", "FRACTURE_2"]`)
+
+### Example
+
+For the FRACS2000 model (Matthaei et al., 2005), an settings file like this
+
+		{
+			"model":{
+				"file name": "fracs2000",
+				"format": "icem",
+				"regions": ["TOP","BOTTOM","LEFT","RIGHT","FRONT","BACK","LIVE","FRAC_LIGHTBLUE","FRAC_GREEN"]
+				},
+			"configuration":{
+				"matrix":{
+					"configuration": "uniform",
+					"permeability": 1.0E-15	
+				},
+				"fractures":{
+					"configuration": "regional uniform",
+					"fracture regions": ["FRAC_LIGHTBLUE","FRAC_GREEN"],
+					"mechanical aperture": [0.025, 0.01],
+					"hydraulic aperture": [0.0075, 0.005]
+				}
+			},
+			"analysis":{
+				"configuration": "bounding box",
+				"corner points": [[[700.0,20.0,500.0],[900.0,180.0,900.0]],[[100.0,20.0,100.0],[500.0,180.0,600.0]]]
+			},
+			"output":{
+				"results file name": "results.json",
+				"vtu": true,
+				"vtu regions": ["FRAC_LIGHTBLUE","FRAC_GREEN"]
+			}
+		}
+		
+produces a screen summary like so
+
+Simulation Result Summary
+===========================
+
+		omega_0
+		-------
+		Upscaled permeability tensor:
+				  8.84e-11      2.56e-12     -3.91e-11
+				  2.56e-12      6.61e-10     -3.19e-11
+				 -3.91e-11     -3.19e-11      2.13e-11
+		Upscaled permeability eigenvalues:
+				  6.62e-10
+				  1.06e-10
+				  2.12e-12
+
+		omega_1
+		-------
+		Upscaled permeability tensor:
+				  1.39e-10      3.82e-11     -4.94e-11
+				  3.82e-11      8.78e-10       2.9e-12
+				 -4.94e-11       2.9e-12      1.81e-10
+		Upscaled permeability eigenvalues:
+				  8.8e-10
+				  2.13e-10
+				  1.05e-10
+
+and a visualization of the two sampling regions
+
+![Fracs 2000](https://raw.githubusercontent.com/plang85/tensor_permeability/master/doc/fracs2000_two_omegas.png)
