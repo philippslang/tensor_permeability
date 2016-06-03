@@ -33,6 +33,8 @@ namespace csmp {
 			Settings s;
 			s.json << f;
 			f.close();
+			//cout << setw(4) << s.json;
+
 			// get matrix configurator
 			Settings mcs(Settings(s, "configuration"), "matrix");
 			MatrixConfiguratorFactory mcf;
@@ -66,9 +68,12 @@ namespace csmp {
 				if (outs.json.count("save final binary")) // write to csmp binary
 					if (outs.json["save final binary"].get<string>() != "")
 						save_model(*model, outs.json["save final binary"].get<string>().c_str());
-				if (outs.json.count("vtu")) // write to vtu
+				if (outs.json.count("vtu")) { // write to vtu
 					if (outs.json["vtu"].get<bool>())
 						vtu(omega_tensors, *model);
+					if (outs.json.count("vtu regions"))
+						vtu(outs.json["vtu regions"].get<vector<string>>(), *model);
+				}
 				if (outs.json.count("results file name")) // write to json
 					jres_fname = s.json["output"]["results file name"].get<string>();
 			}			

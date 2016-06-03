@@ -1,1 +1,1 @@
-//#define LINK_SAMG
+#define LINK_SAMG

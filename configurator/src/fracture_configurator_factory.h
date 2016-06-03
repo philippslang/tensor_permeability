@@ -67,7 +67,7 @@ namespace csmp {
 
 		with a list of region names and mechanical apertures (consistent order):
 
-			"region names": ["FRACTURE1", "FRACTURE2"],
+			"fracture regions": ["FRACTURE1", "FRACTURE2"],
 			"mechanical aperture": [1.0, 2.0]
 
 		### Isotropic hydraulic aperture with projection
@@ -75,7 +75,7 @@ namespace csmp {
 		If `hydraulic aperture` is a single float per region, an isotropic aperture is imposed.
 
 			"configuration": "regional uniform",
-			"region names": ["FRACTURE1", "FRACTURE2"],
+			"fracture regions": ["FRACTURE1", "FRACTURE2"],
 			"mechanical aperture": [1.0, 2.0],
 			"hydraulic aperture": [0.1, 0.2]
 
@@ -88,7 +88,7 @@ namespace csmp {
 		for each fracture region. Likewise, becuase the tensor is possibly rotated, permeability (rotated ah^2/12 tensor) and conductivity (rotated ah^3/12 tensor) have to be specified:
 
 			"configuration": "regional uniform"
-			"region names": ["FRACTURE1", "FRACTURE2"],
+			"fracture regions": ["FRACTURE1", "FRACTURE2"],
 			"mechanical aperture": [1.0, 2.0],
 			"hydraulic aperture": [[9.8911e-12, 7.5806e-13, 9.1479e-13, 7.5806e-13, 1.7099e-11, 1.753e-12, 9.1479e-13, 1.753e-12, 1.2423e-11],
 								   [9.8911e-12, 7.5806e-13, 9.1479e-13, 7.5806e-13, 1.7099e-11, 1.753e-12, 9.1479e-13, 1.753e-12, 1.2423e-11]],

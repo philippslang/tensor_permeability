@@ -102,5 +102,15 @@ namespace csmp {
 		}
 
 
+		void vtu(const std::vector<std::string>& r, const Model<3>& m, const char* fname)
+		{
+			csmp::VTU_Interface<3> vtu(m);
+			vtu.OmitZeroInFileName(true);
+			list<string> oprops = { "fluid pressure" };
+			for (const auto& rit : r)
+				vtu.OutputDataToVTU(fname, oprops, rit.c_str());
+		}
+
+
 	} // !tperm
 } // !csmp

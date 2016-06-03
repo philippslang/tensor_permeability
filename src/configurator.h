@@ -21,6 +21,10 @@ namespace csmp {
 			virtual bool configure(Model&) const = 0;
 		};
 
+		/** \class Configurator
+
+		Configurators should check correctness of settings in ctor and throw.
+		*/
 	} // !tperm
 } // !csmp
 

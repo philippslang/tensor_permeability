@@ -42,7 +42,7 @@ namespace csmp {
 			}
 			else if (c == string("regional uniform")) {
 				const auto ams = s.json["mechanical aperture"].get<vector<double>>();
-				const auto frnames = s.json["region names"].get<vector<string>>();
+				const auto frnames = s.json["fracture regions"].get<vector<string>>();
 				if (s.json.count("permeability")) { // tensor
 					vector<string> props = { "hydraulic aperture" , "permeability", "conductivity" };
 					vector<vector<TensorVariable<3>>> vals(props.size(), vector<TensorVariable<3>>(ams.size(), TensorVariable<3>()));
@@ -53,9 +53,10 @@ namespace csmp {
 					}
 					pConf.reset(new RegionalUniformFractureConfigurator(vals.at(0), vals.at(1), vals.at(2), ams, frnames));
 				}
-				else // scalar
-					pConf.reset(new RegionalUniformFractureConfigurator(s.json["hydraulic aperture"].get<vector<double>>(), 
-																		ams, frnames));
+				else { // scalar
+					const auto ahs = s.json["hydraulic aperture"].get<vector<double>>();
+					pConf.reset(new RegionalUniformFractureConfigurator(ahs, ams, frnames));
+				}
 			}
 			return pConf;
 		}

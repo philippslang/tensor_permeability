@@ -8,6 +8,8 @@ Permeability is a csmp tensor variable
 
 The results of each pressure run are stored in `pressure gradient 0` and `velocity 0` for 0-1 (2D) or 0-2 (3D)
 
+All input checks should be performed *if possible* before the model loads
+
 Pervasive assumptions throughout the application are
 
 - Pressure is solved over the entier `Model` region
@@ -41,6 +43,7 @@ The tensor `hydraulic aperture` has to honour that the fracture normal eigenvect
 The variable `permeability` is only initialized for the matrix of the model
 
 @todo Register functionality for parameters in settings...requires some thinking
+@todo Boundaries should always be imported witout setting
 @todo Check that tensor trans is ok
 @todo consolidate 2D criterion to function
 @todo need an exception and log policy

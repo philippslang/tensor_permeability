@@ -49,8 +49,10 @@ namespace csmp {
 
 		void RegionalUniformFractureConfigurator::check_vsize() const
 		{
-			if (ahs_.size() == ams_.size() == frnames_.size())
-				return;
+			const size_t r(ahs_.size());
+			if (r == ams_.size())
+				if (r == frnames_.size())
+					return;
 			throw runtime_error("Vectors for regional fracture configuration are not of uniform length");
 		}
 
