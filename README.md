@@ -1,4 +1,4 @@
-# Tensor Permeability {#mainpage}
+# Tensor Permeability 
 
 Tensor Permeability is a C++ finite element (FE) framework and executable for the computation of the full upscaled permeability 
 tensor in porous media. It is based upon CSMP++ finite element data structures and algorithms. The main features
@@ -297,12 +297,12 @@ For the FRACS2000 model (Matthaei et al., 2005), an settings file like this
 				"vtu regions": ["FRAC_LIGHTBLUE","FRAC_GREEN"]
 			}
 		}
-		
+
 produces a screen summary like so
 
-Simulation Result Summary
-===========================
-
+		Simulation Result Summary
+		===========================
+		
 		omega_0
 		-------
 		Upscaled permeability tensor:
