@@ -8,7 +8,7 @@ of tensor permeability are:
 	
 	+ No assumptions are made on the orientation of upscaled pemability eigenvalues
 	+ No periodicity requirements are made as to the underlying geometry and permeability distribution
-	+ Emphasis on fractur support
+	+ Emphasis on fracture support
 	
 - Incorporation of locally varying and tensor-form permeability and transmissivity
 
@@ -29,7 +29,7 @@ of tensor permeability are:
 
 ### Requirements (Windows)
 
-- The binaries `tensor_permeability.exe', `libamg_dyn.dll`, and `libiomp5md.dll`
+- The binaries `tensor_permeability.exe`, `libamg_dyn.dll`, and `libiomp5md.dll`
 - MSVC [runtime](https://www.microsoft.com/en-us/download/details.aspx?id=48145)
 
 And for models with more than 25000 elements
@@ -267,7 +267,7 @@ regions (`"vtu": true`) and additionally for the regions "FRACTURE_1" and "FRACT
 
 ### Example
 
-For the FRACS2000 model (Matthaei et al., 2005), an settings file like this
+For the FRACS2000 model (Matthaei et al., 2005), a settings file that configures two sets of fractures looks like this:
 
 		{
 			"model":{
@@ -298,7 +298,7 @@ For the FRACS2000 model (Matthaei et al., 2005), an settings file like this
 			}
 		}
 
-produces a screen summary like so
+and produces a screen summary like so
 
 		Simulation Result Summary
 		===========================
@@ -325,6 +325,83 @@ produces a screen summary like so
 				  2.13e-10
 				  1.05e-10
 
-and a visualization of the two sampling regions
+Visualization of the two sampling regions shows their location within the model
 
 ![Fracs 2000](https://raw.githubusercontent.com/plang85/tensor_permeability/master/doc/fracs2000_two_omegas.png)
+
+A complete account of the upscaling results is output in `results.json`:
+
+		{
+			"sampling regions": {
+				"omega_0": {
+					"eigen values": [
+						2.11678759881574e-12,
+						1.05955934709474e-10,
+						6.62461357462325e-10
+					],
+					"eigen vectors": [
+						[
+							-0.411204005101016,
+							-0.0424900717365861,
+							-0.910552502600868
+						],
+						[
+							0.911509395661833,
+							-0.0277877804291414,
+							-0.410339445921327
+						],
+						[
+							-0.00786688051792995,
+							-0.998710384977868,
+							0.050156546215574
+						]
+					],
+					"tensor": [
+						8.84323457058634e-11,
+						2.55802910081648e-12,
+						-3.90993313778758e-11,
+						2.55802910081648e-12,
+						6.60839455644576e-10,
+						-3.18938722898994e-11,
+						-3.90993313778758e-11,
+						-3.18938722898994e-11,
+						2.12622784201741e-11
+					]
+				},
+				"omega_1": {
+					"eigen values": [
+						1.04934242101843e-10,
+						2.1309019227867e-10,
+						8.79736614398485e-10
+					],
+					"eigen vectors": [
+						[
+							0.836994544415482,
+							-0.0434672693426623,
+							0.545482107052662
+						],
+						[
+							0.544779026182029,
+							-0.0276910553960627,
+							-0.838122316898442
+						],
+						[
+							-0.051535863734677,
+							-0.99867101787673,
+							-0.000502794367676158
+						]
+					],
+					"tensor": [
+						1.3909105056514e-10,
+						3.82454558221439e-11,
+						-4.93630065238251e-11,
+						3.82454558221439e-11,
+						8.7776151923872e-10,
+						2.89918499323819e-12,
+						-4.93630065238251e-11,
+						2.89918499323819e-12,
+						1.80908478975138e-10
+					]
+				}
+			}
+		}
