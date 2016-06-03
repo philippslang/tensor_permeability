@@ -1,12 +1,12 @@
 # Tensor Permeability 
 
-Tensor Permeability is a C++ finite element (FE) framework and executable for the computation of the full upscaled permeability 
-tensor in porous media. It is based upon CSMP++ finite element data structures and algorithms. The main features
+Tensor Permeability is a C++ finite element (FE) framework and executable for the computation of full upscaled permeability 
+tensors in porous media. It is based upon CSMP++ finite element data structures and algorithms. The main features
 of tensor permeability are:
 
 - Upscaling of the full permeability tensor for arbitrary geometries in porous media
 	
-	+ No assumptions are made on the orientation of upscaled pemability eigenvalues
+	+ No assumptions are made on the orientation of upscaled permeability eigenvalues
 	+ No periodicity requirements are made as to the underlying geometry and permeability distribution
 	+ Emphasis on fracture support
 	
@@ -17,13 +17,15 @@ of tensor permeability are:
 	
 - Highly tested against analytical solutions
 
-	+ Numerous benchmark, with emphasis on discrete fracture and matrix models (DFMs) 
+	+ Numerous benchmarks, with emphasis on discrete fracture and matrix models (DFMs) 
 	
 - `JSON` based application I/O, C++ API and Python interface.
 
 	+ Standardized file interfaces for application control and output
 	+ C++ and Python API for seamless integration
 
+This implementation is based on the [JGR Publication Lang et. al, 2014](http://onlinelibrary.wiley.com/doi/10.1002/2014JB011027/full),
+with the extension to locally tensorial element properties (anisotropic matrix permeability and fracture hydraulic aperture).
 
 ## Running as an executable
 
@@ -76,10 +78,10 @@ A minimal configuration looks like this:
 					"configuration": "uniform",
 					"permeability": 1.0E-15
 				},
-					"fractures":{
-						"configuration": "uniform",
-						"mechanical aperture": 0.0001, 
-						"hydraulic aperture": 0.0001
+				"fractures":{
+					"configuration": "uniform",
+					"mechanical aperture": 0.0001, 
+					"hydraulic aperture": 0.0001
 				}
 			},
 			"analysis":{
@@ -132,10 +134,10 @@ and the fracture mechanical and hydraulic aperture. The minimal configuration fo
 			"configuration": "uniform",
 			"permeability": 1.0E-15
 		},
-			"fractures":{
-				"configuration": "uniform",
-				"mechanical aperture": 0.0001, 
-				"hydraulic aperture": 0.0001
+		"fractures":{
+			"configuration": "uniform",
+			"mechanical aperture": 0.0001, 
+			"hydraulic aperture": 0.0001
 		}
 		
 In this case, all elements that qualify as matrix (volumetric elements) will be assigned a spherical permeability tensor
@@ -148,7 +150,7 @@ And all fractures will have a spherical, in-plane projected tensor for the hydra
 
 		1.0E-3  0.0     0.0
 		0.0     1.0E-3  0.0       m
-		0.0     0.0     1.0E-3
+		0.0     0.0     0.0
 		
 In this form of initialization, transmissivity and conductivity will be computed internally.
 Uniform values can also be assigned on a by-region basis. The configuration section then looks like
@@ -225,7 +227,7 @@ For every `omega` that results from the above settings, eigenvalues and the full
 
 #### File output
 
-This optional section allows for output to files: Results as above and more to ascii (`.json`) and to VTK for visualization (`.vtu`):
+This optional section allows for output to files: Results as above and more to ascii (`.json`) and to VTK for visualization (`.vtu`).
 A complete settings file so far including minimal visual and text output looks like this
 
 		{
@@ -239,11 +241,11 @@ A complete settings file so far including minimal visual and text output looks l
 					"configuration": "uniform",
 					"permeability": 1.0E-15
 				},
-					"fractures":{
-						"configuration": "regional uniform",
-						"mechanical aperture": [0.0001, 0.0002],
-						"hydraulic aperture": [0.0001, 0.00015],
-						"fracture regions": ["FRACTURE_1", "FRACTURE_2"]
+				"fractures":{
+					"configuration": "regional uniform",
+					"mechanical aperture": [0.0001, 0.0002],
+					"hydraulic aperture": [0.0001, 0.00015],
+					"fracture regions": ["FRACTURE_1", "FRACTURE_2"]
 				}
 			},
 			"analysis":{
@@ -267,7 +269,7 @@ regions (`"vtu": true`) and additionally for the regions "FRACTURE_1" and "FRACT
 
 ### Example
 
-For the FRACS2000 model (Matthaei et al., 2005), a settings file that configures two sets of fractures looks like this:
+For the FRACS2000 model [Matthaei et al., 2005](https://www.onepetro.org/conference-paper/SPE-93341-MS), a settings file that configures two sets of fractures looks like this:
 
 		{
 			"model":{
@@ -411,3 +413,10 @@ and an ellipsoid visualization of the `omega` corresponding tensors looks like t
 ![Fracs 2000 Results](https://raw.githubusercontent.com/plang85/tensor_permeability/master/doc/fracs2000_summary.png) 
 
 
+## References
+
+Lang, P. S., Paluszny, A., & Zimmerman, R. W. (2014). Permeability tensor of three-dimensional fractured porous rock and a comparison to trace map predictions. 
+Journal of Geophysical Research: Solid Earth, 119(8), 6288-6307. doi:10.1002/2014JB011027
+
+Matthaei, S. K., Geiger, S., Roberts, S. G., Paluszny, A., Belayneh, M., Burri, A., Heinrich, C. A. (2007). Numerical simulation of multi-phase fluid flow in structurally complex reservoirs. 
+Geological Society, London, Special Publications, 292(1), 405-429. doi:10.1144/SP292.22
