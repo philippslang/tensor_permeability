@@ -2,7 +2,7 @@
 #define TP_RESULTS_H
 
 #include <vector>
-
+#include <numeric>
 
 namespace csmp {
 	namespace tperm {
@@ -39,6 +39,8 @@ namespace csmp {
 					return vel_comps_.at(component);
 				return pgrad_comps_.at(component);
 			}
+
+			double domain_volume() const { return accumulate(vols_.begin(), vols_.end(), 0.); }
 
 		private:
 			std::vector<double> vols_;                       ///< Element volumes

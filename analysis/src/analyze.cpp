@@ -6,7 +6,6 @@
 
 #include <Eigen/Dense>
 
-#include <numeric>
 
 using namespace std;
 
@@ -62,8 +61,7 @@ namespace csmp {
 
 
 		/**
-		Assumes unit viscosity, and sets permeability values below E-25
-		to zero.
+		Assumes unit viscosity.
 		*/
 		UpscaledTensor analyze(const std::vector<FlowResults>& frv)
 		{
@@ -71,9 +69,9 @@ namespace csmp {
 			UpscaledTensor r(d);
 
 			// averaging
-			auto& volumes = frv[0].volumes(); // assumption: element info for all exps identical
+			const auto& volumes = frv[0].volumes(); // assumption: element info for all exps identical
+			const auto total_volume = frv[0].domain_volume();
 			const auto elements = volumes.size(); // assumption: element info for all exps identical
-			const auto total_volume = accumulate(volumes.begin(), volumes.end(), 0.);
 			// average xy(z) components for pressure gradients and velocities for each experiment (outer index)
 			// and each component (inner index)
 			vector<vector<double>> vel_avgs(d, vector<double>(d)), pgrad_avgs(d, vector<double>(d));

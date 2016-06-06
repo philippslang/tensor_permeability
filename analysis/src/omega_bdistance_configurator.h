@@ -19,7 +19,7 @@ namespace csmp {
 			/// All with distance from model boundaries
 			explicit OmegaBDistanceConfigurator(double);
 
-			virtual bool configure(Model&) const;
+			virtual bool configure(Model&) const override;
 
 		private:
 			const double dist_;

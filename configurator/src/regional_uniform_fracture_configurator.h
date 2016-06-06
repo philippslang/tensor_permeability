@@ -25,7 +25,7 @@ namespace csmp {
 												const std::vector<double>& ams,
 												const std::vector<std::string>& rnames);
 
-			virtual bool configure(Model&) const;
+			virtual bool configure(Model&) const override;
 
 		private:
 			void check_vsize() const;			

@@ -14,7 +14,7 @@ namespace csmp {
 			FractureConfiguratorFactory();
 			virtual ~FractureConfiguratorFactory();
 
-			virtual std::unique_ptr<Configurator> configurator(const Settings&) const;
+			virtual std::unique_ptr<Configurator> configurator(const Settings&) const override;
 		};
 
 

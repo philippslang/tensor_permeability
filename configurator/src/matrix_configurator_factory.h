@@ -14,7 +14,7 @@ namespace csmp {
 			MatrixConfiguratorFactory();
 			virtual ~MatrixConfiguratorFactory();
 
-			virtual std::unique_ptr<Configurator> configurator(const Settings&) const;
+			virtual std::unique_ptr<Configurator> configurator(const Settings&) const override;
 		};
 
 

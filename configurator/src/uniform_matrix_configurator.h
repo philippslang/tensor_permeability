@@ -19,7 +19,7 @@ namespace csmp {
 			/// Spherical tensor, i.e. isotropic permeability
 			explicit UniformMatrixConfigurator(double);
 
-			virtual bool configure(Model&) const;
+			virtual bool configure(Model&) const override;
 
 		private:
 			const csmp::TensorVariable<3> perm_;

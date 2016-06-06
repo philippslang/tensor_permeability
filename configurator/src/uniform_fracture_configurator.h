@@ -23,7 +23,7 @@ namespace csmp {
 			/// Spherical tensor, i.e. isotropic transmissivity
 			UniformFractureConfigurator(double ah, double am);
 
-			virtual bool configure(Model&) const;
+			virtual bool configure(Model&) const override;
 
 		protected:			
 			void input_am(Model&, const std::vector<Element<3>*>&, double) const;

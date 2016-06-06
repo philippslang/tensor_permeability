@@ -20,7 +20,7 @@ namespace csmp {
 			/// As many regions as corner point pairs (box), regions named `omega_0...n-1`
 			explicit OmegaCornerPointsConfigurator(const std::vector<std::array<csmp::Point<3>, 2>>&);
 
-			virtual bool configure(Model&) const;
+			virtual bool configure(Model&) const override;
 
 		private:
 			/// Returns points with all minimum components and all maximum components of the provided points
