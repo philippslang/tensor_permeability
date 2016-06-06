@@ -142,5 +142,26 @@ namespace csmp {
 		}
 
 
+		bool has_fractures(const csmp::Model<3>& m)
+		{
+			return true;
+		}
+
+
+		bool is_two_D(const csmp::Model<3>& m)
+		{
+			return !(m.ContainsBoundary("FRONT") || m.ContainsBoundary("BOUNDARY5"));
+		}
+
+
+		size_t dimensionality(const csmp::Model<3>& m)
+		{
+			if (is_two_D(m))
+				return 2;
+			return 3;
+		}
+
+
+
 	} // !tperm
 } // !csmp

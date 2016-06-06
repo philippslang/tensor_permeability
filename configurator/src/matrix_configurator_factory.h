@@ -55,6 +55,8 @@ namespace csmp {
 
 			conductivity	co	m2 Pa-1 s-1	3	1e-25	1	ELEMENT
 			permeability	pe	m2	3	1e-25	1e-08	ELEMENT
+
+		@todo If no matrix present, no settings should be required
 		*/
 
 	} // !tperm

@@ -106,6 +106,7 @@ namespace csmp {
 			permeability	pe	m2	3	1e-25	1e-08	ELEMENT
 
 		@todo Realistic numbers in examples
+		@todo If no fractures present, no settings should be required
 		*/
 
 	} // !tperm

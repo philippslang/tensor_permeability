@@ -25,10 +25,22 @@ namespace csmp {
 		std::unique_ptr<csmp::Model<3>> load_model(const Settings&);
 
 		/// Generates app specific property database
-		std::unique_ptr<csmp::PropertyDatabase<3>> property_database(bool two_d);
+		std::unique_ptr<csmp::PropertyDatabase<3>> property_database(bool two_d = false);
 
 		/// Saves csmp::Model to native bindary
 		bool save_model(const csmp::Model<3>&, const char*);
+
+		/// Determines if DFN only
+		bool has_matrix(const csmp::Model<3>&);
+
+		/// Determines if fractures present
+		bool has_fractures(const csmp::Model<3>&);
+
+		/// Based on presence of 'FRONT' or 'BOUNDARY5'
+		bool is_two_D(const csmp::Model<3>&);
+
+		/// Wrapper for two_D
+		size_t dimensionality(const csmp::Model<3>&);
 
 	} // !tperm
 } // !csmp
