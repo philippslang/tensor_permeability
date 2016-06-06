@@ -3,7 +3,7 @@
 #include "model_io.h"
 #include "matrix_configurator_factory.h"
 #include "fracture_configurator_factory.h"
-#include "configurator.h"
+#include "null_configurator.h"
 #include "sort_boundaries.h"
 #include "pressure_solver.h"
 #include "omega_configurator_factory.h"
@@ -35,14 +35,22 @@ namespace csmp {
 			f.close();
 			//cout << setw(4) << s.json;
 
+			// empty configurators
+			unique_ptr<csmp::tperm::Configurator> mconf = make_unique<csmp::tperm::NullConfigurator>();
+			unique_ptr<csmp::tperm::Configurator> fconf = make_unique<csmp::tperm::NullConfigurator>();
 			// get matrix configurator
-			Settings mcs(Settings(s, "configuration"), "matrix");
-			MatrixConfiguratorFactory mcf;
-			auto mconf = mcf.configurator(mcs);
+			Settings cs(s, "configuration");
+			if (cs.json.count("matrix")) {
+				Settings mcs(cs, "matrix");
+				MatrixConfiguratorFactory mcf;
+				mconf = mcf.configurator(mcs);
+			}
 			// get fracture configurator
-			Settings fcs(Settings(s, "configuration"), "fractures");
-			FractureConfiguratorFactory fcf;
-			auto fconf = fcf.configurator(fcs);
+			if (cs.json.count("fractures")) {
+				Settings fcs(cs, "fractures");
+				FractureConfiguratorFactory fcf;
+				fconf = fcf.configurator(fcs);
+			}
 			// get omega generator
 			Settings acs(s, "analysis");
 			OmegaConfiguratorFactory ocf;

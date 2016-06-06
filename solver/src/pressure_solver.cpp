@@ -2,6 +2,7 @@
 #include "boundaries.h"
 #include "bpreds.h"
 #include "defs.h"
+#include "model_io.h"
 
 #include "Model.h"
 #include "SAMG_Solver.h"
@@ -127,7 +128,7 @@ namespace csmp {
 			const array<string, 2> rvnames = { (string) "pressure gradient " + to_string(d), (string) "velocity " + to_string(d) };
 			const Index pgKey(m.Database().StorageKey(rvnames[0].c_str()));
 			const Index vKey(m.Database().StorageKey(rvnames[1].c_str()));
-			const bool twod = !containsVolumeElements(m.Region("Model"));
+			const bool twod = is_two_D(m);
 			const MatrixElement<3> mbp(twod);
 			const Index kKey(m.Database().StorageKey("permeability"));
 			const Index pKey(m.Database().StorageKey("fluid pressure"));

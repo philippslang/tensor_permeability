@@ -61,7 +61,7 @@ namespace csmp {
 		{
 			auto rref = m.Region(rname);
 			const size_t elements = rref.Elements();
-			const size_t md = dimensionality(m);// containsVolumeElements(rref) ? 3 : 2;
+			const size_t md = dimensionality(m);
 			const MatrixElement<3> mbp(md==2);			
 			vector<double> evols(elements);
 			vector<vector<double>> vel_comps(md, vector<double>(elements)), pg_comps(md, vector<double>(elements));

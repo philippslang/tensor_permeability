@@ -1,4 +1,5 @@
 #include "sort_boundaries.h"
+#include "model_io.h"
 
 #include "Model.h"
 
@@ -31,7 +32,7 @@ namespace csmp {
 		*/
 		Boundaries sort_boundaries(const Model<3>& m, const Settings& s)
 		{
-			const size_t d = containsVolumeElements(m.Region("Model")) ? 3 : 2;
+			const size_t d = dimensionality(m);
 			auto obnames = opposing_boundary_names(m);
 			Boundaries bds(d);
 			for (size_t i(0); i < d; ++i) {

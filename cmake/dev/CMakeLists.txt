@@ -22,6 +22,7 @@ INCLUDE_DIRECTORIES(${INCLUDE_DIRECTORIES} .
 SET (tensor_permeability_SRC 
 		../../src/settings.cpp
 		../../src/configurator.cpp
+		../../src/null_configurator.cpp
 		../../src/configurator_factory.cpp
 		../../src/model_io.cpp
 		../../test/main.cpp
@@ -47,6 +48,7 @@ SET (tensor_permeability_test_SRC
 		../../src/settings.cpp
 		../../src/settings_test.cpp
 		../../src/configurator.cpp
+		../../src/null_configurator.cpp
 		../../src/configurator_factory.cpp
 		../../src/model_io.cpp
 		../../test/main.cpp
@@ -76,6 +78,7 @@ SET (tensor_permeability_HEADER
 		../../src/ttrans.h
 		../../src/settings.h
 		../../src/configurator.h
+		../../src/null_configurator.h
 		../../src/configurator_factory.h
 		../../src/model_io.h
 		../../src/run.h
@@ -102,6 +105,7 @@ SET (tensor_permeability_test_HEADER
 		../../src/ttrans.h
 		../../src/settings.h
 		../../src/configurator.h
+		../../src/null_configurator.h
 		../../src/configurator_factory.h
 		../../src/model_io.h
 		../../src/run.h
