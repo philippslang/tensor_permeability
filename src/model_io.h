@@ -5,7 +5,10 @@
 
 #include <memory>
 #include <vector>
+#include <array>
 #include <string>
+#include <algorithm>
+
 
 namespace csmp {
 	template<size_t> class Model;
@@ -41,6 +44,17 @@ namespace csmp {
 
 		/// Wrapper for two_D
 		size_t dimensionality(const csmp::Model<3>&);
+
+		/// Identification of outer model boundary based on naming convention
+		inline bool is_main_boundary_id(std::string blname)
+		{
+			static const std::array<std::string, 12> outer = { "TOP", "BOTTOM", "LEFT", "RIGHT", "FRONT", "BACK" ,
+				"BOUNDARY1", "BOUNDARY2", "BOUNDARY3", "BOUNDARY4", "BOUNDARY5", "BOUNDARY6" };
+			auto it = find(outer.begin(), outer.end(), blname);
+			if (it != outer.end())
+				return true;
+			return false;
+		}
 
 	} // !tperm
 } // !csmp

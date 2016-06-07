@@ -1,4 +1,5 @@
 #include "omega_bdistance_configurator.h"
+#include "model_io.h"
 
 #include "Model.h"
 

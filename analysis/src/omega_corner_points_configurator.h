@@ -51,6 +51,8 @@ namespace csmp {
 
 		Creates non-unique csmp::Region `omega0..x` that contains all csmp::Element within boxes of provided corner
 		point pairs.
+
+		@deprecated We don't use omega configurators - look for the equivalent function factory
 		*/
 
 

@@ -31,16 +31,17 @@ namespace csmp {
 					pgrad_comps_.at(component).assign(first, last);
 			}
 
-			size_t D() const { return pgrad_comps_.size(); }
+			size_t dim() const { return pgrad_comps_.size(); }
 
 			const std::vector<double>& volumes() const { return vols_; }
+
 			const std::vector<double>& components(Data r, size_t component) const {
 				if (r == Data::velocity)
 					return vel_comps_.at(component);
 				return pgrad_comps_.at(component);
 			}
 
-			double domain_volume() const { return accumulate(vols_.begin(), vols_.end(), 0.); }
+			virtual double domain_volume() const { return accumulate(vols_.begin(), vols_.end(), 0.); }
 
 		private:
 			std::vector<double> vols_;                       ///< Element volumes
@@ -59,6 +60,7 @@ namespace csmp {
 
 			/// Row-column access
 			double& operator()(size_t r, size_t c) { return t_.at(row_column_to_idx(r, c)); }
+
 			/// Row-column const access
 			double  operator()(size_t r, size_t c) const { return t_.at(row_column_to_idx(r, c)); }
 
