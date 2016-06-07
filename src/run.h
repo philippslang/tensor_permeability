@@ -4,9 +4,13 @@
 
 namespace csmp {
 	namespace tperm {
+		class Settings;
+
+		/// Forwards settings from file 
+		void run(const char*);
 
 		/// Main control flow method
-		void run_from_file(const char*);
+		void run(const Settings&);
 
 
 	} // !tperm

@@ -33,6 +33,7 @@ namespace csmp {
 
 			size_t dim() const { return pgrad_comps_.size(); }
 
+			/**@deprecated Use omega volume*/
 			const std::vector<double>& volumes() const { return vols_; }
 
 			const std::vector<double>& components(Data r, size_t component) const {
@@ -41,6 +42,7 @@ namespace csmp {
 				return pgrad_comps_.at(component);
 			}
 
+			/**@deprecated Use omega volume*/
 			virtual double domain_volume() const { return accumulate(vols_.begin(), vols_.end(), 0.); }
 
 		private:

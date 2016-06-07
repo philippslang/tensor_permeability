@@ -11,6 +11,7 @@
 #include "pressure_solver.h"
 #include "omega_configurator_factory.h"
 #include "fetch.h"
+#include "run.h"
 #include "report.h"
 #include "Model.h"
 #include "TensorVariable.h"
@@ -20,7 +21,7 @@ using namespace csmp::tperm;
 using namespace std;
 
 
-#define TP_EXTENDED_TESTS 0
+#define TP_EXTENDED_TESTS 1
 
 
 TEST_CASE("reading base configuration file") {
@@ -105,22 +106,7 @@ TEST_CASE("flow tdd minimal configuration") {
 	auto oconf = ocf.configurator(acs);
 
 	if (TP_EXTENDED_TESTS) {
-		// load model...		
-		Settings ms(s, "model");
-		auto model = load_model(ms);
-		// configure material properties
-		mconf->configure(*model);
-		fconf->configure(*model);
-		// sort boundaries
-		auto bds = sort_boundaries(*model, s);
-		// ready to solve
-		solve(bds, *model);
-		// generate omegas
-		oconf->configure(*model);
-		// get upscaled tensors
-		auto omega_tensors = fetch(*model);
-		// report
-		report(omega_tensors, *model);
+		REQUIRE_NOTHROW(run(s));
 	}
 }
 
@@ -132,7 +118,7 @@ TEST_CASE("flow tdd extended configuration") {
 				 "model": {
                      "file name": "debug",
 					 "format": "icem",
-					 "regions": ["CREATED_MATERIAL_9", "FRACTURES", "BOUNDARY1", "BOUNDARY2", "BOUNDARY3", "BOUNDARY4", "BOUNDARY5", "BOUNDARY6"],
+					 "regions": ["CREATED_MATERIAL_9", "FRACTURES", "BOUNDARY1", "BOUNDARY2", "BOUNDARY3", "BOUNDARY4", "BOUNDARY5", "BOUNDARY6"]
                  },
 				 "configuration": {
 				     "matrix":{
@@ -141,7 +127,7 @@ TEST_CASE("flow tdd extended configuration") {
 					 },
 					 "fractures":{
 						 "configuration": "regional uniform",
-						 "region names": ["FRACTURES"],
+						 "fracture regions": ["FRACTURES"],
 						 "mechanical aperture": [0.0001], 
 						 "hydraulic aperture": [0.0001]
 					 }
@@ -154,34 +140,20 @@ TEST_CASE("flow tdd extended configuration") {
 
 	// get matrix configurator
 	Settings mcs(Settings(s, "configuration"), "matrix");
+	
 	MatrixConfiguratorFactory mcf;
 	auto mconf = mcf.configurator(mcs);
 	// get fracture configurator
 	Settings fcs(Settings(s, "configuration"), "fractures");
-	FractureConfiguratorFactory fcf;
-	auto fconf = fcf.configurator(fcs);
+	auto fconf = FractureConfiguratorFactory().configurator(fcs);
+
 	// get omega generator
 	Settings acs(s, "analysis");
 	OmegaConfiguratorFactory ocf;
 	auto oconf = ocf.configurator(acs);
-
+	
 	if (TP_EXTENDED_TESTS) {
-		// load model...		
-		Settings ms(s, "model");
-		auto model = load_model(ms);
-		// configure material properties
-		mconf->configure(*model);
-		fconf->configure(*model);
-		// sort boundaries
-		auto bds = sort_boundaries(*model, s);
-		// ready to solve
-		solve(bds, *model);
-		// generate omegas
-		oconf->configure(*model);
-		// get upscaled tensors
-		auto omega_tensors = fetch(*model);
-		// report results
-		report(omega_tensors, *model);
+		REQUIRE_NOTHROW(run(s));
 	}
 }
 

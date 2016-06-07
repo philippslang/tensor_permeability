@@ -19,12 +19,9 @@ namespace csmp {
 	namespace tperm {
 
 		/**
-		@todo JSON access errors lack specifier
 		@todo Minimal input OK check
-		@todo Clean up nested checks for optional JSON arguments
-		@todo Eigenvalues should be computed independent of json output, stored and used twice, for screen and file
 		*/
-		void run_from_file(const char* fn)
+		void run(const char* fn)
 		{
 			// load settings file
 			ifstream f(fn);
@@ -34,7 +31,16 @@ namespace csmp {
 			s.json << f;
 			f.close();
 			//cout << setw(4) << s.json;
+			run(s);
+		}
 
+		/**
+		@todo JSON access errors lack specifier
+		@todo Clean up nested checks for optional JSON arguments
+		@todo Eigenvalues should be computed independent of json output, stored and used twice, for screen and file
+		*/
+		void run(const Settings& s)
+		{
 			// empty configurators
 			unique_ptr<csmp::tperm::Configurator> mconf = make_unique<csmp::tperm::NullConfigurator>();
 			unique_ptr<csmp::tperm::Configurator> fconf = make_unique<csmp::tperm::NullConfigurator>();
