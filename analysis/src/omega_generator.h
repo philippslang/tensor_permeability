@@ -35,6 +35,7 @@ namespace csmp {
 		/// Fills provided Omega, deletes whatever in it
 		void omega_from_elements(const std::vector<Element<3>*>&, const csmp::Index&, Omega&);
 
+
 	} // !tperm
 } // !csmp
 

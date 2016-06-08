@@ -28,8 +28,6 @@ namespace csmp {
 			FractureElement<3> fel(two_d);
 			const auto bit = begin(o);
 			for (auto it(bit); it != end(o); ++it) {
-				const size_t i = distance(bit, it);
-				cout << i << "\t" << elmts.size() << endl;
 				it->ePtr = elmts.at(distance(bit, it));
 				it->eVol = it->ePtr->Volume();
 				if (fel(it->ePtr))

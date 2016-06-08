@@ -97,7 +97,7 @@ namespace csmp {
 			vtu.OmitZeroInFileName(true);
 			list<string> oprops = { "fluid pressure" };
 			vtu.OutputDataToVTU(fname, oprops);
-			for (const auto& mit : omega_tensors) 
+			for (const auto& mit : omega_tensors)
 				vtu.OutputDataToVTU(fname, oprops, mit.first.c_str());
 		}
 

@@ -7,6 +7,9 @@
 #include "sort_boundaries.h"
 #include "pressure_solver.h"
 #include "omega_configurator_factory.h"
+#include "make_omega_generator.h"
+#include "omega_generator.h"
+#include "omega.h"
 #include "fetch.h"
 #include "report.h"
 
@@ -59,7 +62,7 @@ namespace csmp {
 			}
 			// get omega generator
 			Settings acs(s, "analysis");
-			auto oconf = OmegaConfiguratorFactory().configurator(acs);
+			auto ogen = make_omega_generator(acs);
 			// load model...		
 			Settings ms(s, "model");
 			auto model = load_model(ms);
@@ -71,9 +74,9 @@ namespace csmp {
 			// ready to solve
 			solve(bds, *model);
 			// generate omegas
-			oconf->configure(*model);
+			auto omegas = ogen->generate(*model);			
 			// get upscaled tensors
-			auto omega_tensors = fetch(*model);
+			auto omega_tensors = fetch(*model, omegas);
 			// results
 			string jres_fname = "";
 			if (s.json.count("output")) {
@@ -82,8 +85,10 @@ namespace csmp {
 					if (outs.json["save final binary"].get<string>() != "")
 						save_model(*model, outs.json["save final binary"].get<string>().c_str());
 				if (outs.json.count("vtu")) { // write to vtu
-					if (outs.json["vtu"].get<bool>())
+					if (outs.json["vtu"].get<bool>()) {
+						make_omega_regions(omegas, m);
 						vtu(omega_tensors, *model);
+					}
 					if (outs.json.count("vtu regions"))
 						vtu(outs.json["vtu regions"].get<vector<string>>(), *model);
 				}

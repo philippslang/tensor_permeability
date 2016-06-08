@@ -36,6 +36,11 @@ TEST_CASE("reading base configuration file") {
 	REQUIRE(jconfig["matrix"]["configuration"].get<string>() == string("uniform"));
 }
 
+TEST_CASE("running from file") {
+	if (1)
+		run("settings.json");
+}
+
 
 TEST_CASE("model factory nullptr") {
 	Settings ms;
@@ -178,9 +183,11 @@ TEST_CASE("omega maker tdd") {
 	Settings acs(s, "analysis");
 	auto ogen = make_omega_generator(acs);
 	Settings mcs(s, "model");
-	auto model = load_model(mcs);
-	REQUIRE(model != nullptr);
-	auto omegas = ogen->generate(*model);
-	//REQUIRE_NOTHROW(run(s));
+	if (TP_EXTENDED_TESTS) {
+		auto model = load_model(mcs);
+		REQUIRE(model != nullptr);
+		auto omegas = ogen->generate(*model);
+		REQUIRE(omegas.size() == 2);
+	}
 }
 
