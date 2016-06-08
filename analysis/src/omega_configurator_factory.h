@@ -20,6 +20,8 @@ namespace csmp {
 
 		/** \class OmegaConfiguratorFactory
 
+		@deprecated We don't use omega configurators - look for the equivalent function factory
+
 		Creates Configurator for the sampling region creation.
 
 		## Single omega region, uniform distance from all model boundaries
@@ -43,7 +45,6 @@ namespace csmp {
 		Sampling regions creates here are independent, i.e. they can overlap. Useful also for scaling investigations, i.e.
 		congruent regions of increasing size.
 
-		@deprecated We don't use omega configurators - look for the equivalent function factory
 		*/
 
 	} // !tperm

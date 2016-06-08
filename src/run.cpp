@@ -37,6 +37,7 @@ namespace csmp {
 
 		/**
 		@todo JSON access errors lack specifier
+		@todo Check that omegas ar filled/exits
 		@todo Clean up nested checks for optional JSON arguments
 		@todo Eigenvalues should be computed independent of json output, stored and used twice, for screen and file
 		*/
@@ -49,19 +50,16 @@ namespace csmp {
 			Settings cs(s, "configuration");
 			if (cs.json.count("matrix")) {
 				Settings mcs(cs, "matrix");
-				MatrixConfiguratorFactory mcf;
-				mconf = mcf.configurator(mcs);
+				mconf = MatrixConfiguratorFactory().configurator(mcs);
 			}
 			// get fracture configurator
 			if (cs.json.count("fractures")) {
 				Settings fcs(cs, "fractures");
-				FractureConfiguratorFactory fcf;
-				fconf = fcf.configurator(fcs);
+				fconf = FractureConfiguratorFactory().configurator(fcs);
 			}
 			// get omega generator
 			Settings acs(s, "analysis");
-			OmegaConfiguratorFactory ocf;
-			auto oconf = ocf.configurator(acs);
+			auto oconf = OmegaConfiguratorFactory().configurator(acs);
 			// load model...		
 			Settings ms(s, "model");
 			auto model = load_model(ms);

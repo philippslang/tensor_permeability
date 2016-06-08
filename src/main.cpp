@@ -8,7 +8,7 @@
 int main(int argc, char* argv[]) {
 
 	std::vector<std::string> fnames;
-	std::string default_fname("settings.json");
+	const std::string default_fname("settings.json");
 	for (size_t i(1); i < argc; ++i)
 		fnames.push_back((std::string)argv[i]);
 

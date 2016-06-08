@@ -26,7 +26,11 @@ namespace csmp {
 
 		/** \class ConfiguratorFactory
 
+		@todo Replace by function style factories
+
 		Primarily, ConfiguratorFactory instances decouples tperm::Configurator from application tperm::Settings.
+		Secondly, they check user settings correctness to instantiate Conifgurator objects, and check these
+		settings before the model is loaded and the Conifgurator applied.
 		*/
 
 		/// Generates a tensor from a tperm::Settings entry

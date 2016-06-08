@@ -19,7 +19,7 @@ namespace csmp {
 		double Omega::total_volume() const
 		{
 			double v(0.);
-			for_each(cbegin(), cend(), [&v](const auto& einf) {v += einf.eVol; });
+			for_each(cbegin(), cend(), [&v](const auto& einf) { v += einf.eVol; });
 			return v;
 		}
 

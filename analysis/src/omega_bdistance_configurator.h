@@ -31,7 +31,7 @@ namespace csmp {
 		Creates non-unique csmp::Region `omega` that contains all csmp::Element within certain distance
 		of all outer model boundaries.
 
-		@deprecated We don't use omega configurators - look for the equivalent function factory
+		@deprecated We don't use omega configurators - look for the equivalent generator
 		*/
 
 

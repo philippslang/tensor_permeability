@@ -1,7 +1,7 @@
-#ifndef TP_OMEGACORNERCONFIG_H
-#define TP_OMEGACORNERCONFIG_H
+#ifndef TP_OMEGA_CP_GENERATOR_H
+#define TP_OMEGA_CP_GENERATOR_H
 
-#include "configurator.h"
+#include "omega_generator.h"
 
 #include "Point.h"
 
@@ -10,17 +10,19 @@
 
 namespace csmp {
 
+
 	namespace tperm {
 
-		/// Creates sampling region using a boundary distance criterion
-		class OmegaCornerPointsConfigurator : public Configurator
+		/// ABC for omega generators
+		class OmegaCornerPointsGenerator : public OmegaGenerator
 		{
 		public:
-			OmegaCornerPointsConfigurator() = delete;
-			/// As many regions as corner point pairs (box), regions named `omega_0...n-1`
-			explicit OmegaCornerPointsConfigurator(const std::vector<std::array<csmp::Point<3>, 2>>&);
+			OmegaCornerPointsGenerator() = delete;
+			/// Minimum distance
+			explicit OmegaCornerPointsGenerator(const std::vector<std::array<csmp::Point<3>, 2>>&);
+			virtual ~OmegaCornerPointsGenerator();
 
-			virtual bool configure(Model&) const override;
+			virtual OmegaPtrColl generate(const csmp::Model<3>&) const override;
 
 		private:
 			/// Returns points with all minimum components and all maximum components of the provided points
@@ -31,7 +33,7 @@ namespace csmp {
 					min[i] = cpts[0][i] < cpts[1][i] ? cpts[0][i] : cpts[1][i];
 					max[i] = cpts[0][i] > cpts[1][i] ? cpts[0][i] : cpts[1][i];
 				}
-				return {min, max};
+				return{ min, max };
 			}
 
 			// False if strictly greated or strictly less than bounds
@@ -46,17 +48,12 @@ namespace csmp {
 			const std::vector<std::array<csmp::Point<3>, 2>> cpts_;
 		};
 
+		/** \class OmegaBDistanceGenerator
 
-		/** \class OmegaCornerPointsConfigurator
-
-		Creates non-unique csmp::Region `omega0..x` that contains all csmp::Element within boxes of provided corner
-		point pairs.
-
-		@deprecated We don't use omega configurators - look for the equivalent generator
+		Generates arbtrary number of Omegas using a bounding box corner point criterion.
 		*/
-
 
 	} // !tperm
 } // !csmp
 
-#endif // !TP_OMEGACORNERCONFIG_H
+#endif // !TP_OMEGA_CP_GENERATOR_H

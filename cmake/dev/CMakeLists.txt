@@ -31,10 +31,14 @@ SET (tensor_permeability_SRC
 		../../analysis/src/analyze.cpp
 		../../analysis/src/results.cpp
 		../../analysis/src/omega.cpp
+		../../analysis/src/omega_generator.cpp
 		../../analysis/src/dfn_omega.cpp
+		../../analysis/src/make_omega_generator.cpp
 		../../analysis/src/omega_configurator_factory.cpp
 		../../analysis/src/omega_bdistance_configurator.cpp
+		../../analysis/src/omega_bdistance_generator.cpp
 		../../analysis/src/omega_corner_points_configurator.cpp
+		../../analysis/src/omega_corner_points_generator.cpp
 		../../solver/src/pressure_solver.cpp
 		../../solver/src/boundaries.cpp
 		../../solver/src/sort_boundaries.cpp
@@ -75,10 +79,14 @@ SET (tensor_permeability_HEADER
 		../../analysis/src/analyze.h
 		../../analysis/src/results.h
 		../../analysis/src/omega.h
+		../../analysis/src/omega_generator.h
 		../../analysis/src/dfn_omega.h
+		../../analysis/src/make_omega_generator.h
 		../../analysis/src/omega_configurator_factory.h
 		../../analysis/src/omega_corner_points_configurator.h
+		../../analysis/src/omega_corner_points_generator.h
 		../../analysis/src/omega_bdistance_configurator.h
+		../../analysis/src/omega_bdistance_generator.h
 		../../solver/src/pressure_solver.h
 		../../solver/src/boundaries.h
 		../../solver/src/sort_boundaries.h

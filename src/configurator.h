@@ -23,7 +23,8 @@ namespace csmp {
 
 		/** \class Configurator
 
-		Configurators should check correctness of settings in ctor and throw.
+		Configurators should check correctness of settings in ctor and throw. The configure method, 
+		ideally, should not throw due to incorrect settings.
 		*/
 	} // !tperm
 } // !csmp

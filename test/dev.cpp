@@ -7,11 +7,13 @@
 #include "matrix_configurator_factory.h"
 #include "fracture_configurator_factory.h"
 #include "configurator.h"
+#include "omega_generator.h"
 #include "sort_boundaries.h"
 #include "pressure_solver.h"
 #include "omega_configurator_factory.h"
 #include "fetch.h"
 #include "run.h"
+#include "make_omega_generator.h"
 #include "report.h"
 #include "Model.h"
 #include "TensorVariable.h"
@@ -21,11 +23,12 @@ using namespace csmp::tperm;
 using namespace std;
 
 
-#define TP_EXTENDED_TESTS 1
+#define TP_EXTENDED_TESTS 0
 
 
 TEST_CASE("reading base configuration file") {
 	std::ifstream f("config.json");
+	REQUIRE(f.is_open());
 	Settings s;
 	REQUIRE_NOTHROW(s.json << f);
 	f.close();
@@ -155,5 +158,29 @@ TEST_CASE("flow tdd extended configuration") {
 	if (TP_EXTENDED_TESTS) {
 		REQUIRE_NOTHROW(run(s));
 	}
+}
+
+
+TEST_CASE("omega maker tdd") {
+	Settings s;
+	s.json = R"({
+				 "model": {
+                     "file name": "debug",
+					 "format": "icem",
+					 "regions": ["CREATED_MATERIAL_9", "BOUNDARY1", "BOUNDARY2", "BOUNDARY3", "BOUNDARY4", "BOUNDARY5", "BOUNDARY6"]
+                 },
+				"analysis":{
+					"configuration": "bounding box",
+					"corner points": [[[-3.0,-3.0,2.0],[3.0,3.0,8.0]], [[-2.0,-2.0,3.0],[2.0,2.0,7.0]]]
+				}
+				})"_json;
+
+	Settings acs(s, "analysis");
+	auto ogen = make_omega_generator(acs);
+	Settings mcs(s, "model");
+	auto model = load_model(mcs);
+	REQUIRE(model != nullptr);
+	auto omegas = ogen->generate(*model);
+	//REQUIRE_NOTHROW(run(s));
 }
 

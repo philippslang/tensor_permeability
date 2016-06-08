@@ -40,6 +40,7 @@ namespace csmp {
 
 		Sampling regions, i.e. subregions of the model over which the upscaled tensor is evaluated
 		*/
+
 	} // !tperm
 } // !csmp
 
