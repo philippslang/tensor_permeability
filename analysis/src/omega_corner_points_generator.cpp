@@ -18,7 +18,7 @@ namespace csmp {
 
 		OmegaCornerPointsGenerator::OmegaPtrColl OmegaCornerPointsGenerator::generate(const csmp::Model<3>& m) const
 		{
-			OmegaPtrColl ptrs(cpts_.size(), make_shared<Omega>());
+			OmegaPtrColl ptrs(cpts_.size());
 			const Index am_key(m.Database().StorageKey("mechanical aperture"));
 
 			size_t i(0);
@@ -31,9 +31,10 @@ namespace csmp {
 				{
 					ebc = eit->BaryCenter();
 					if (!within_bounds(ebc, cmm))
-						continue;						// not within min-max bounds
-					ePtrs.push_back(eit);    // is within min-max bounds
+						continue;					// not within min-max bounds
+					ePtrs.push_back(eit);           // is within min-max bounds
 				}
+				ptrs[i] = make_shared<Omega>();
 				omega_from_elements(ePtrs, am_key, *ptrs[i]);
 				++i;
 			}

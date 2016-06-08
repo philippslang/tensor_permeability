@@ -7,6 +7,7 @@
 #include "omega.h"
 
 #include <iterator>
+#include <algorithm>
 
 using namespace std;
 
@@ -37,23 +38,22 @@ namespace csmp {
 			return onames;
 		}
 
+
 		/**
 		@todo Need an indirection here for omega collection, mediator class to loosen coupling with OmegaGenerator
 		*/
-		map<string, UpscaledTensor> fetch(const csmp::Model<3>& m, const std::vector<std::shared_ptr<Omega>>& ocoll)
+		map<string, UpscaledTensor> fetch(const csmp::Model<3>& m, const std::map<std::string, std::shared_ptr<Omega>>& ocoll)
 		{
 			map<string, UpscaledTensor> r;
 			const size_t md = dimensionality(m);
-			const size_t n = ocoll.size();
-			auto onames = omega_names(n);
-			for (size_t i(0); i < n; ++i)
+			for (const auto& oit : ocoll)
 			{				
 				vector<FlowResults> fr;
 				for (size_t d(0); d < md; ++d)
-					fr.push_back(fetch(d, *ocoll[i], m));
-				auto ri_raw = analyze(fr);
+					fr.push_back(fetch(d, *oit.second, m));
+				auto ri_raw = analyze(fr, oit.second->total_volume());
 				auto ri = post_process(ri_raw);
-				r.insert(std::make_pair(onames[i], ri));
+				r.insert(std::make_pair(oit.first, ri));
 			}
 			return r;
 		}
@@ -105,9 +105,26 @@ namespace csmp {
 		}
 
 
-		void make_omega_regions(const std::vector<std::shared_ptr<Omega>>&, csmp::Model<3>&)
+		void make_omega_regions(const std::map<std::string, std::shared_ptr<Omega>>& omegas, csmp::Model<3>& m)
 		{
+			m.UpdateIndices();
+			for (const auto& o : omegas) {
+				size_t i(0);
+				vector<size_t> eids(o.second->size(), 0);
+				for_each(o.second->cbegin(), o.second->cend(), [&](const auto& einf) { eids[i++] = einf.ePtr->Idx(); });
+				m.FormRegionFrom(o.first.c_str(), eids);
+			}
+		}
 
+
+		std::map<std::string, std::shared_ptr<Omega>> named_omegas(const std::vector<std::shared_ptr<Omega>>& omegas)
+		{
+			std::map<std::string, std::shared_ptr<Omega>> nos;
+			const size_t n(omegas.size());
+			auto onames = omega_names(n);
+			for (size_t i(0); i < n; ++i)
+				nos.insert(make_pair(onames[i], omegas[i]));
+			return nos;
 		}
 
 

@@ -62,15 +62,16 @@ namespace csmp {
 
 		/**
 		Assumes unit viscosity.
+
+		@todo Dont like the total_volume bare here
 		*/
-		UpscaledTensor analyze(const std::vector<FlowResults>& frv)
+		UpscaledTensor analyze(const std::vector<FlowResults>& frv, double total_volume)
 		{
 			const size_t d = frv.size();
 			UpscaledTensor r(d);
 
 			// averaging
 			const auto& volumes = frv[0].volumes(); // assumption: element info for all exps identical
-			const auto total_volume = frv[0].domain_volume();
 			const auto elements = volumes.size(); // assumption: element info for all exps identical
 			// average xy(z) components for pressure gradients and velocities for each experiment (outer index)
 			// and each component (inner index)

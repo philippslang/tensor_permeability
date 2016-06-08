@@ -74,9 +74,10 @@ namespace csmp {
 			// ready to solve
 			solve(bds, *model);
 			// generate omegas
-			auto omegas = ogen->generate(*model);			
+			auto omegas = ogen->generate(*model);
+			auto nomegas = named_omegas(omegas);
 			// get upscaled tensors
-			auto omega_tensors = fetch(*model, omegas);
+			auto omega_tensors = fetch(*model, nomegas);
 			// results
 			string jres_fname = "";
 			if (s.json.count("output")) {
@@ -86,7 +87,7 @@ namespace csmp {
 						save_model(*model, outs.json["save final binary"].get<string>().c_str());
 				if (outs.json.count("vtu")) { // write to vtu
 					if (outs.json["vtu"].get<bool>()) {
-						make_omega_regions(omegas, m);
+						make_omega_regions(nomegas, *model);
 						vtu(omega_tensors, *model);
 					}
 					if (outs.json.count("vtu regions"))
