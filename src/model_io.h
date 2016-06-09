@@ -45,6 +45,9 @@ namespace csmp {
 		/// Wrapper for two_D
 		size_t dimensionality(const csmp::Model<3>&);
 
+		/// Based on presence of 'FRONT' or 'BOUNDARY5' and volume elements
+		bool is_dfn(const csmp::Model<3>&);
+
 		/// Identification of outer model boundary based on naming convention
 		inline bool is_main_boundary_id(std::string blname)
 		{

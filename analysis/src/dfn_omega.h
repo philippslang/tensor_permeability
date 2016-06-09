@@ -17,6 +17,7 @@ namespace csmp {
 		public:
 			DfnOmega();
 			explicit DfnOmega(double tv) : tv_(tv) {};
+			explicit DfnOmega(const Omega& o, double tv) : Omega(o), tv_(tv) {};
 			virtual ~DfnOmega();
 
 			virtual double total_volume() const override { return tv_; };

@@ -10,22 +10,23 @@ using namespace std;
 namespace csmp {
 	namespace tperm {
 
+
 		OmegaBDistanceGenerator::OmegaBDistanceGenerator()
 			: dist_(0.)
 		{}
+
 
 		OmegaBDistanceGenerator::OmegaBDistanceGenerator(double dist)
 			: dist_(dist)
 		{}
 
+
 		OmegaBDistanceGenerator::~OmegaBDistanceGenerator()
 		{}
 
+
 		OmegaBDistanceGenerator::OmegaPtrColl OmegaBDistanceGenerator::generate(const csmp::Model<3>& m) const
 		{
-			OmegaPtrColl ptrs(1, make_shared<Omega>());
-			const Index am_key(m.Database().StorageKey("mechanical aperture"));
-
 			csmp::Point<3> ebc;
 			vector<csmp::Element<3>*> ePtrs;
 			ePtrs.reserve(m.Region("Model").Elements());
@@ -47,9 +48,15 @@ namespace csmp {
 				if (dmin >= dist_)
 					ePtrs.push_back(eit);
 			}
-			omega_from_elements(ePtrs, am_key, *ptrs[0]);
+
+			OmegaPtrColl ptrs(1, nullptr); 
+			const Index am_key(m.Database().StorageKey("mechanical aperture"));
+			Omega o;
+			omega_from_elements(ePtrs, am_key, o);
+			ptrs[0] = make_shared<Omega>(o);
 			return ptrs;
 		}
+
 
 	} // ! tperm
 } // !csmp

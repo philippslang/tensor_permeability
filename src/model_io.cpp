@@ -153,6 +153,13 @@ namespace csmp {
 			return !(m.ContainsBoundary("FRONT") || m.ContainsBoundary("BOUNDARY5"));
 		}
 
+		bool is_dfn(const csmp::Model<3>& m)
+		{
+			if (is_two_D(m))
+				return !containsSurfaceElements(m.Region("Model"));
+			return !containsVolumeElements(m.Region("Model"));
+		}
+
 
 		size_t dimensionality(const csmp::Model<3>& m)
 		{
