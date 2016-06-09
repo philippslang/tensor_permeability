@@ -1,5 +1,6 @@
 #include "omega_bdistance_generator.h"
 #include "omega.h"
+#include "dfn_omega.h"
 #include "model_io.h"
 
 #include "Point.h"
@@ -23,6 +24,16 @@ namespace csmp {
 
 		OmegaBDistanceGenerator::~OmegaBDistanceGenerator()
 		{}
+
+
+		double OmegaBDistanceGenerator::sampling_box_total_volume(const csmp::Model<3>& m) const
+		{
+			std::array<csmp::Point<3>, 2> cmm;
+			m.MinMaxCoordinates(cmm[0], cmm[1]);
+			cmm[0] += dist_;
+			cmm[1] -= dist_;
+			return this->total_volume(cmm);
+		}
 
 
 		OmegaBDistanceGenerator::OmegaPtrColl OmegaBDistanceGenerator::generate(const csmp::Model<3>& m) const
@@ -51,9 +62,11 @@ namespace csmp {
 
 			OmegaPtrColl ptrs(1, nullptr); 
 			const Index am_key(m.Database().StorageKey("mechanical aperture"));
-			Omega o;
-			omega_from_elements(ePtrs, am_key, o);
-			ptrs[0] = make_shared<Omega>(o);
+			auto o = omega_from_elements(ePtrs, am_key);
+			if (!is_dfn(m))
+				ptrs[0] = make_shared<Omega>(o);
+			else
+				ptrs[0] = make_shared<DfnOmega>(o, sampling_box_total_volume(m));
 			return ptrs;
 		}
 

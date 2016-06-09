@@ -25,17 +25,6 @@ namespace csmp {
 			virtual OmegaPtrColl generate(const csmp::Model<3>&) const override;
 
 		private:
-			/// Returns points with all minimum components and all maximum components of the provided points
-			std::array<csmp::Point<3>, 2> min_max(const std::array<csmp::Point<3>, 2>& cpts) const
-			{
-				csmp::Point<3> min, max;
-				for (size_t i(0); i < 3; ++i) {
-					min[i] = cpts[0][i] < cpts[1][i] ? cpts[0][i] : cpts[1][i];
-					max[i] = cpts[0][i] > cpts[1][i] ? cpts[0][i] : cpts[1][i];
-				}
-				return{ min, max };
-			}
-
 			// False if strictly greated or strictly less than bounds
 			bool within_bounds(const csmp::Point<3>& pt, const std::array<csmp::Point<3>, 2>& minmax) const
 			{

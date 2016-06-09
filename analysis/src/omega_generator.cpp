@@ -21,8 +21,9 @@ namespace csmp {
 		mechanical aperture	me	m	1	0	1	ELEMENT
 		\endcode
 		*/
-		void omega_from_elements(const vector<csmp::Element<3>*>& elmts, const csmp::Index& am_key, Omega& o)
+		Omega omega_from_elements(const vector<csmp::Element<3>*>& elmts, const csmp::Index& am_key)
 		{
+			Omega o;
 			o.resize(elmts.size());
 			const bool two_d(false);
 			FractureElement<3> fel(two_d);
@@ -33,8 +34,17 @@ namespace csmp {
 				if (fel(it->ePtr))
 					it->eVol = it->eVol*it->ePtr->Read(am_key);
 			}
+			return o;
 		}
 
+
+		double OmegaGenerator::total_volume(const std::array<csmp::Point<3>, 2>& cmm) const
+		{
+			double tv(1.0);
+			for (size_t d(0); d < 3; ++d)
+				tv *= cmm[1][d] - cmm[0][d];
+			return tv;
+		}
 
 	} // ! tperm
 } // !csmp

@@ -1,5 +1,7 @@
 #include "omega_corner_points_generator.h"
 #include "omega.h"
+#include "dfn_omega.h"
+#include "model_io.h"
 
 #include "Model.h"
 
@@ -12,6 +14,7 @@ namespace csmp {
 		OmegaCornerPointsGenerator::OmegaCornerPointsGenerator(const std::vector<std::array<csmp::Point<3>, 2>>& cpts)
 			: cpts_(cpts)
 		{}
+
 
 		OmegaCornerPointsGenerator::~OmegaCornerPointsGenerator()
 		{}
@@ -34,8 +37,11 @@ namespace csmp {
 						continue;					// not within min-max bounds
 					ePtrs.push_back(eit);           // is within min-max bounds
 				}
-				ptrs[i] = make_shared<Omega>();
-				omega_from_elements(ePtrs, am_key, *ptrs[i]);
+				Omega o = omega_from_elements(ePtrs, am_key);
+				if (!is_dfn(m))
+					ptrs[i] = make_shared<Omega>(o);
+				else
+					ptrs[i] = make_shared<DfnOmega>(o, total_volume(cmm));
 				++i;
 			}
 			return ptrs;

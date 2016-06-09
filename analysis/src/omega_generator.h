@@ -1,9 +1,12 @@
+/** @file */
 #ifndef TP_OMEGAGENERATOR_H
 #define TP_OMEGAGENERATOR_H
 
 #include <vector>
 #include <memory>
+#include <array> 
 
+#include "Point.h"
 
 namespace csmp {
 	// forwards
@@ -24,7 +27,22 @@ namespace csmp {
 			OmegaGenerator() {};
 			virtual ~OmegaGenerator() {};
 
-			virtual OmegaPtrColl generate(const csmp::Model<3>&) const = 0;			
+			virtual OmegaPtrColl generate(const csmp::Model<3>&) const = 0;	
+
+		protected:
+			/// Returns points with all minimum components and all maximum components of the provided points
+			std::array<csmp::Point<3>, 2> min_max(const std::array<csmp::Point<3>, 2>& cpts) const
+			{
+				csmp::Point<3> min, max;
+				for (size_t i(0); i < 3; ++i) {
+					min[i] = cpts[0][i] < cpts[1][i] ? cpts[0][i] : cpts[1][i];
+					max[i] = cpts[0][i] > cpts[1][i] ? cpts[0][i] : cpts[1][i];
+				}
+				return{ min, max };
+			}
+
+			/// Volume of the bounding box
+			double total_volume(const std::array<csmp::Point<3>, 2>&) const;
 		};
 
 		/** \class OmegaGenerator
@@ -32,8 +50,8 @@ namespace csmp {
 		Abstract base class for omega generators. Errors should be detected during ctors, and not during the generate call.
 		*/
 
-		/// Fills provided Omega, deletes whatever in it
-		void omega_from_elements(const std::vector<Element<3>*>&, const csmp::Index&, Omega&);
+		/// Instantiates element pointers and volumes
+		Omega omega_from_elements(const std::vector<Element<3>*>&, const csmp::Index&);
 
 
 	} // !tperm

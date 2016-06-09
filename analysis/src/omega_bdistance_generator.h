@@ -22,6 +22,9 @@ namespace csmp {
 			virtual OmegaPtrColl generate(const csmp::Model<3>&) const override;
 
 		private:
+			/// Assumes box shape
+			double sampling_box_total_volume(const csmp::Model<3>&) const;
+
 			const double dist_;
 		};
 
