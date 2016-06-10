@@ -3,6 +3,8 @@
 #include "settings.h"
 #include "PropertyDatabase.h"
 
+#include <stdexcept>
+
 using namespace std;
 
 namespace csmp {
@@ -47,6 +49,22 @@ namespace csmp {
 						m.RemoveRegion(it->first.c_str(), true);
 						it = m.UniqueRegionsBegin();
 					}
+			if (containsLineElements(m.Region("Model")))
+				throw runtime_error("Model still contains line elements");
+		}
+
+
+		/// Removes line element regions for 3D models
+		void make_dfn_boundaries(csmp::Model<3>& m)
+		{
+			vector<string> bregions;
+			// loop over regions
+			for (auto it = m.UniqueRegionsBegin(); it != m.UniqueRegionsEnd(); ++it)
+				if (is_main_boundary_id(it->first)) // identify boundary names
+					bregions.push_back(it->first);
+			// converting
+			for (auto br : bregions)
+				m.InsertBoundary(br.c_str(), IRREGULAR, true, true); // make boundaries
 		}
 
 		
@@ -75,7 +93,17 @@ namespace csmp {
 			"file name": "csp" 
 			"format": "csmp binary"
 
-		Removes line element regions if 3D model. Returns nullptr if options not valid.
+		## DFN (fracture only model)
+
+		For a fracture only model, boundaries have to be formed in a different manner. This requires the following keyword
+
+			"dfn": true
+
+		In the case of DFNs, a region file or regions list must be provided to exclude line elements.
+
+		Removes line element regions if 3D model. Returns nullptr if options not valid. If DFN model (settings entry), boundaries are formed accordingly.
+		
+		@todo Issue warning if DFN and no regions specs
 		*/
 		unique_ptr<csmp::Model<3>> load_model(const Settings& s)
 			{
@@ -83,6 +111,11 @@ namespace csmp {
 				unique_ptr<csmp::Model<3>> pMod(nullptr);
 				const bool two_d = false;
 				const auto mfname = ls.json["file name"].get<string>();
+				bool dfn(false), form_boundaries(true);
+				if (s.json.count("dfn"))
+					dfn = ls.json["dfn"].get<bool>();
+				if (dfn)
+					form_boundaries = false;
 				unique_ptr<csmp::PropertyDatabase<3>> pdb = property_database(two_d);
 				const char* vfname = "tmp-variables.txt";
 				if (!write_vfile(vfname, *pdb))
@@ -95,13 +128,16 @@ namespace csmp {
 				}
 				if (option == "icem") // icem (ansys) bin file based
 					if (ls.json.count("regions file"))
-						pMod.reset(new ANSYS_Model3D(mfname.c_str(), ls.json["regions file"].get<string>().c_str(), vfname, true, true, true));
+						pMod.reset(new ANSYS_Model3D(mfname.c_str(), ls.json["regions file"].get<string>().c_str(), vfname, true, true, form_boundaries));
 					else
-						pMod.reset(new ANSYS_Model3D(mfname.c_str(), vfname, true, true, false, true));
+						pMod.reset(new ANSYS_Model3D(mfname.c_str(), vfname, true, true, false, form_boundaries));
 				else if (option == "csmp binary") //csmp bin file based 
 					pMod.reset(new Model<3>(mfname.c_str()));
-				if (pMod)
+				if (pMod) {
+					if (dfn)
+						make_dfn_boundaries(*pMod);
 					cleanup(*pMod);
+				}
 				return pMod;
 			}
 

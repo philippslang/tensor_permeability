@@ -37,7 +37,7 @@ TEST_CASE("reading base configuration file") {
 }
 
 TEST_CASE("running from file") {
-	if (1)
+	if (TP_EXTENDED_TESTS)
 		run("settings.json");
 }
 

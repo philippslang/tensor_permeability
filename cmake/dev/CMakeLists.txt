@@ -58,6 +58,7 @@ SET (tensor_permeability_test_SRC
 		${tensor_permeability_SRC}
 		../../src/ttrans_test.cpp
 		../../src/settings_test.cpp
+		../../solver/src/pressure_solver_test.cpp
 		../../test/main.cpp
 		../../test/dev.cpp
 		../../analysis/src/omega_test.cpp)

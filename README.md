@@ -117,7 +117,8 @@ As an alternative option, a regions file can be generated for all regions specif
 This creates a temporary regions file that is being used when loading the Ansys model.
 
 *Attention: Line element only Icem families will be removed automatically for 3D models, no need to specifiy regions just to exclude those.
-In most cases, you'll be able to load the model as a whole without `regions` or `regions file`*
+In most cases, you'll be able to load the model as a whole without `regions` or `regions file`. This does not apply to DFNs. For DFNs, a regions list or file
+has to be provided to exclude line elements.*
 
 #### Configuring a model
 
