@@ -45,7 +45,7 @@ namespace csmp {
 			\endcode
 
 		@todo Check that flag override when resetting actually works
-		@todo Linear boundary conditions
+		@todo Linear boundary conditions option
 		*/
 		void solve(const Boundaries& bds, Model<3>& m)
 		{
@@ -59,8 +59,7 @@ namespace csmp {
 				reset(m, fp.name.c_str());
 				// apply BCs
 				primary_bc(bds[d], fp.key, half_dp);
-				if (is_dfn(m))
-					supplementary_bc(bds, fp.key, half_dp, d);
+				//supplementary_bc(bds, fp.key, half_dp, d);
 				// solve pressure
 				solve_pressure(m);
 				// store pressure gradient and velocity

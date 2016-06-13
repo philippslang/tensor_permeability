@@ -93,14 +93,6 @@ namespace csmp {
 			"file name": "csp" 
 			"format": "csmp binary"
 
-		## DFN (fracture only model)
-
-		For a fracture only model, boundaries have to be formed in a different manner. This requires the following keyword
-
-			"dfn": true
-
-		In the case of DFNs, a region file or regions list must be provided to exclude line elements.
-
 		Removes line element regions if 3D model. Returns nullptr if options not valid. If DFN model (settings entry), boundaries are formed accordingly.
 		
 		@todo Issue warning if DFN and no regions specs
@@ -109,13 +101,8 @@ namespace csmp {
 			{
 				Settings ls(s); // local copy that is mutable
 				unique_ptr<csmp::Model<3>> pMod(nullptr);
-				const bool two_d = false;
+				const bool two_d(false), form_boundaries(true);
 				const auto mfname = ls.json["file name"].get<string>();
-				bool dfn(false), form_boundaries(true);
-				if (s.json.count("dfn"))
-					dfn = ls.json["dfn"].get<bool>();
-				if (dfn)
-					form_boundaries = false;
 				unique_ptr<csmp::PropertyDatabase<3>> pdb = property_database(two_d);
 				const char* vfname = "tmp-variables.txt";
 				if (!write_vfile(vfname, *pdb))
@@ -134,8 +121,6 @@ namespace csmp {
 				else if (option == "csmp binary") //csmp bin file based 
 					pMod.reset(new Model<3>(mfname.c_str()));
 				if (pMod) {
-					if (dfn)
-						make_dfn_boundaries(*pMod);
 					cleanup(*pMod);
 				}
 				return pMod;
