@@ -48,6 +48,8 @@ namespace csmp {
 		/** \class OmegaGenerator
 
 		Abstract base class for omega generators. Errors should be detected during ctors, and not during the generate call.
+
+		@todo New generators should implement boost.Geometry
 		*/
 
 		/// Instantiates element pointers and volumes
