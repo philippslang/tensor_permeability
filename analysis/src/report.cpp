@@ -20,11 +20,9 @@ namespace csmp {
 		void underline(string title, bool duscore)
 		{
 			cout << title << endl;
+			const char* s = duscore ? "=" : "-";
 			for (auto t : title)
-				if (duscore)
-					cout << "=";
-				else
-					cout << "-";
+				cout << s;
 			cout << endl;
 		}
 

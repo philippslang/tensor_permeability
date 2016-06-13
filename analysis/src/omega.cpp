@@ -1,6 +1,7 @@
 #include "omega.h"
 
 #include <algorithm>
+#include <numeric>
 
 using namespace std;
 
@@ -18,9 +19,7 @@ namespace csmp {
 
 		double Omega::total_volume() const
 		{
-			double v(0.);
-			for_each(cbegin(), cend(), [&v](const auto& einf) { v += einf.eVol; });
-			return v;
+			return accumulate(cbegin(), cend(), 0., [](const double v, const auto& einf) { return v+einf.eVol; });;
 		}
 
 

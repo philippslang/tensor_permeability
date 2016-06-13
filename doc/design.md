@@ -43,7 +43,8 @@ The tensor `hydraulic aperture` has to honour that the fracture normal eigenvect
 The variable `permeability` is only initialized for the matrix of the model
 
 @todo Register functionality for parameters in settings...requires some thinking
-@todo Boundaries should always be imported witout setting
+@todo FE assembly should be reused between runs
+@todo Boundaries should always be imported without setting
 @todo Check that tensor trans is ok
 @todo consolidate 2D criterion to function
 @todo need an exception and log policy
