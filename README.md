@@ -29,6 +29,10 @@ with the extension to locally tensorial element properties (anisotropic matrix p
 
 ![GoFrak example](https://raw.githubusercontent.com/plang85/tensor_permeability/master/doc/gofrak/image4156.png) 
 
+### Acknowledgements
+
+The Python tensor visualization script is based on a [StackOverflow answer](http://stackoverflow.com/questions/14016898/port-matlab-bounding-ellipsoid-code-to-python) by [unutbu](http://stackoverflow.com/users/190597/unutbu)
+
 ## Running as an executable
 
 ### Requirements (Windows)
