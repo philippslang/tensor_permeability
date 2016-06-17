@@ -33,9 +33,30 @@ that are assigned to different parts of the model. For a GoFrak input file like 
 
 a FE model with two files (`sim_Dfn_sim_ex1.asc` and `sim_Dfn_sim_ex1.dat`) is created. In this (geometrical) model, the fracture sets `BCF3a` ... `BCF2a` exist. 
 When configuring the model, apertures can be assigned on a fracture set-basis using these names. You can check the names for the
-fracture sets in the provided `.asc` file, which should look something like this
+fracture sets in the provided `.asc` file, which should start with something like this
 
-	XXX
+		20 # Number of families
+		# Objectname        Elementtype        Material-ID   Number of elements
+		MATRIX              TETRA_4                 0             2279315
+		BCF2A               TRI_3                   0               33860
+		BCF2A               BAR_2                   0               18176
+		BCF1A               TRI_3                   0               42455
+		BCF1A               BAR_2                   0                9351
+		BCF3B               TRI_3                   0                3868
+		BCF3B               BAR_2                   0                 656
+		BOUNDARY1           TRI_3                   0                4533
+		BOUNDARY1           BAR_2                   0                  65
+		BOUNDARY2           TRI_3                   0                4493
+		BOUNDARY2           BAR_2                   0                  39
+		BOUNDARY3           TRI_3                   0               13371
+		BOUNDARY3           BAR_2                   0                  57
+		BOUNDARY4           TRI_3                   0                4365
+		BOUNDARY4           BAR_2                   0                  73
+		BOUNDARY5           TRI_3                   0                4547
+		BOUNDARY5           BAR_2                   0                  61
+		BOUNDARY6           TRI_3                   0                4075
+		BOUNDARY6           BAR_2                   0                  50
+		INTERSECTIONS       BAR_2                   0               30239
 	
 ## Settings
 
@@ -125,14 +146,38 @@ else previous results may be overwritten.
 
 ## Analysis
 
-The full tensor, eigenvectors and eigenvalues will be output to the file specified in `results file name`, and might look like this
+The full tensor, eigenvectors and eigenvalues will be output to the file specified in `results file name`, and the
+screen summary might look like this
 
-		XXX
+		Simulation Result Summary
+		===========================
+
+		omega_0
+		-------
+		Upscaled permeability tensor:
+					4.19e-14     -1.97e-14     -3.63e-17
+				 -1.97e-14       1.5e-14     -2.89e-16
+				 -3.63e-17     -2.89e-16      2.24e-15
+		Upscaled permeability eigenvalues:
+					5.23e-14
+					4.59e-15
+					 2.2e-15
+
+		omega_1
+		-------
+		Upscaled permeability tensor:
+					 4.1e-15      3.02e-15      1.18e-16
+					3.02e-15      2.94e-15      4.54e-16
+					1.18e-16      4.54e-16      1.47e-15
+		Upscaled permeability eigenvalues:
+					6.63e-15
+					1.52e-15
+					3.71e-16
 
 Also, each fracture set, each upscaling region (`omega`) and the entire model will be output to vtu, which may be used to
 produce a plot like this
 
-		XXX
+![OMEGAS](C:\Development\profectio\trunk\PhD@ICL\tensor_permeability\doc\gofrak\omegas.png)
 
 Optionally, the upscaled permeability tensor can be visualized using the python script `tp_ellipsoid.py`. This should
 also be done by means of a local batch file to call
@@ -146,4 +191,5 @@ if the results filename is `results.json` or
 for other filenames. This requires Python 3.5 in PATH, and produces an interactive window per sampling region
 that can be rotated and saved as a bitmap.
 
-		XXX
+![OMEGA_0](C:\Development\profectio\trunk\PhD@ICL\tensor_permeability\doc\gofrak\omega_0.png)
+![OMEGA_1](C:\Development\profectio\trunk\PhD@ICL\tensor_permeability\doc\gofrak\omega_1.png)
