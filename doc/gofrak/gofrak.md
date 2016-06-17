@@ -177,7 +177,7 @@ screen summary might look like this
 Also, each fracture set, each upscaling region (`omega`) and the entire model will be output to vtu, which may be used to
 produce a plot like this
 
-![OMEGAS](C:\Development\profectio\trunk\PhD@ICL\tensor_permeability\doc\gofrak\omegas.png)
+![OMEGAS](https://raw.githubusercontent.com/plang85/tensor_permeability/master/doc/gofrak/omegas.png)
 
 Optionally, the upscaled permeability tensor can be visualized using the python script `tp_ellipsoid.py`. This should
 also be done by means of a local batch file to call
@@ -191,5 +191,5 @@ if the results filename is `results.json` or
 for other filenames. This requires Python 3.5 in PATH, and produces an interactive window per sampling region
 that can be rotated and saved as a bitmap.
 
-![OMEGA_0](C:\Development\profectio\trunk\PhD@ICL\tensor_permeability\doc\gofrak\omega_0.png)
-![OMEGA_1](C:\Development\profectio\trunk\PhD@ICL\tensor_permeability\doc\gofrak\omega_1.png)
+![OMEGA_0](https://raw.githubusercontent.com/plang85/tensor_permeability/master/doc/gofrak/omega_0.png)
+![OMEGA_1](https://raw.githubusercontent.com/plang85/tensor_permeability/master/doc/gofrak/omega_1.png)
