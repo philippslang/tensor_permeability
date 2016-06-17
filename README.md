@@ -27,6 +27,8 @@ of tensor permeability are:
 This implementation is based on the [JGR Publication Lang et. al, 2014](http://onlinelibrary.wiley.com/doi/10.1002/2014JB011027/full),
 with the extension to locally tensorial element properties (anisotropic matrix permeability and fracture hydraulic aperture).
 
+![GoFrak example](https://raw.githubusercontent.com/plang85/tensor_permeability/master/doc/gofrak/image4156.png) 
+
 ## Running as an executable
 
 ### Requirements (Windows)
