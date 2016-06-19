@@ -32,6 +32,7 @@ with the extension to locally tensorial element properties (anisotropic matrix p
 ### Acknowledgements
 
 The tensor visualization script is based on a [StackOverflow answer](http://stackoverflow.com/questions/14016898/port-matlab-bounding-ellipsoid-code-to-python) by [unutbu](http://stackoverflow.com/users/190597/unutbu)
+
 The volume averaging approach is based on a prototype developed by Siroos Azizmohammadi at University Leoben in 2012
 
 ## Running as an executable
