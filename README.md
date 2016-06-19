@@ -4,7 +4,7 @@ Tensor Permeability is a C++ finite element (FE) framework and executable for th
 tensors in porous media. It is based upon CSMP++ finite element data structures and algorithms. The main features
 of tensor permeability are:
 
-- Upscaling of the full permeability tensor for arbitrary geometries in porous media
+- Flow-based upscaling of the full permeability tensor for arbitrary geometries in porous media
 	
 	+ No assumptions are made on the orientation of upscaled permeability eigenvalues
 	+ No periodicity requirements are made as to the underlying geometry and permeability distribution
@@ -31,7 +31,8 @@ with the extension to locally tensorial element properties (anisotropic matrix p
 
 ### Acknowledgements
 
-The Python tensor visualization script is based on a [StackOverflow answer](http://stackoverflow.com/questions/14016898/port-matlab-bounding-ellipsoid-code-to-python) by [unutbu](http://stackoverflow.com/users/190597/unutbu)
+The tensor visualization script is based on a [StackOverflow answer](http://stackoverflow.com/questions/14016898/port-matlab-bounding-ellipsoid-code-to-python) by [unutbu](http://stackoverflow.com/users/190597/unutbu)
+The volume averaging approach is based on a prototype developed by Siroos Azizmohammadi at University Leoben in 2012
 
 ## Running as an executable
 
