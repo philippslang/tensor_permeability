@@ -37,38 +37,24 @@ The volume averaging approach is based on a prototype developed by Siroos Azizmo
 
 ## Running as an executable
 
-### Requirements (Windows)
-
-- The binaries `tensor_permeability.exe`, `libamg_dyn.dll`, and `libiomp5md.dll`
-- MSVC [runtime](https://www.microsoft.com/en-us/download/details.aspx?id=48145)
-
-And for models with more than 25000 elements
-
-- Access to a SAMG license server (VPN, college network) and 
-
-OPTIONAL: For editing the settings files and visualization of VTU output we recommend 
-
-- [Notepad++](https://notepad-plus-plus.org/) - Editor for settings and results `.json` files
-- [ParaView](http://www.paraview.org/download/) - VTK Visualizer for `.vtu` files
-
 ### Calling the solver
 
 The command for the solver in the most basic case is 
 
-		> tensor_permeability.exe
+		> tensor_permeability
 		
 In which case the default settings file name `settings.json` is assumed to exits in the working directory.
 The application will exit with a descriptive error message if the file is not present. 
 
 The command for reading a specific settings file is the same with the file name as added arguments
 
-		> tensor_permeability.exe case0_settings.json
+		> tensor_permeability case0_settings.json
 
 In which case the settings file `case0_settings.json` is assumed to exits in the working directory.
 The application will exit with a descriptive error message if the file is not present. The application can be called with 
 series of settings files, as so
 
-		> tensor_permeability.exe case0_settings.json case1_settings.json case2_settings.json
+		> tensor_permeability case0_settings.json case1_settings.json case2_settings.json
 
 In which case all provided the settings files are assumed to exits in the working directory, and are run in order.
 
