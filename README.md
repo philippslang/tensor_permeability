@@ -414,3 +414,6 @@ Journal of Geophysical Research: Solid Earth, 119(8), 6288-6307. doi:10.1002/201
 
 Matthaei, S. K., Geiger, S., Roberts, S. G., Paluszny, A., Belayneh, M., Burri, A., Heinrich, C. A. (2007). Numerical simulation of multi-phase fluid flow in structurally complex reservoirs. 
 Geological Society, London, Special Publications, 292(1), 405-429. doi:10.1144/SP292.22
+
+Lang, P. S. Multi-scale modelling of coupled thermo-hydro-mechanical-chemical processes in fractured rocks.
+Doctoral Thesis, Imperial College, 2016. http://hdl.handle.net/10044/1/45644
