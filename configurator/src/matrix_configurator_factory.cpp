@@ -9,30 +9,26 @@ using namespace std;
 namespace csmp {
 namespace tperm {
 
-    MatrixConfiguratorFactory::MatrixConfiguratorFactory()
-        : ConfiguratorFactory()
-    {
-    }
+MatrixConfiguratorFactory::MatrixConfiguratorFactory()
+    : ConfiguratorFactory() {}
 
-    MatrixConfiguratorFactory::~MatrixConfiguratorFactory()
-    {
-    }
+MatrixConfiguratorFactory::~MatrixConfiguratorFactory() {}
 
-    /**
-		Returns nullptr if settings incorrect.
-		*/
-    std::unique_ptr<Configurator> MatrixConfiguratorFactory::configurator(const Settings& s) const
-    {
-        std::unique_ptr<Configurator> pConf(nullptr);
-        const string c = s.json["configuration"].get<string>();
+/**
+Returns nullptr if settings incorrect.
+*/
+std::unique_ptr<Configurator>
+MatrixConfiguratorFactory::configurator(const Settings &s) const {
+  std::unique_ptr<Configurator> pConf(nullptr);
+  const string c = s.json["configuration"].get<string>();
 
-        if (c == string("uniform")) {
-            const TensorVariable<3> mperm = tensor("permeability", s);
-            pConf.reset(new UniformMatrixConfigurator(mperm));
-        } else if (0) {
-        }
-        return pConf;
-    }
+  if (c == string("uniform")) {
+    const TensorVariable<3> mperm = tensor("permeability", s);
+    pConf.reset(new UniformMatrixConfigurator(mperm));
+  } else if (0) {
+  }
+  return pConf;
+}
 
 } // !tperm
 } // ! csmp

@@ -7,17 +7,19 @@
 #include <vector>
 
 namespace csmp {
-template <size_t>
-class Model;
+template <size_t> class Model;
 
 namespace tperm {
-    class UpscaledTensor;
+class UpscaledTensor;
 
-    /// Computes upscaled permeability tensor
-    void report(const std::map<std::string, UpscaledTensor>&, const Model<3>&, std::string fname = "");
+/// Computes upscaled permeability tensor
+void report(const std::map<std::string, UpscaledTensor> &, const Model<3> &,
+            std::string fname = "");
 
-    void vtu(const std::map<std::string, UpscaledTensor>&, const Model<3>&, const char* fname = "tensor_permeability");
-    void vtu(const std::vector<std::string>&, const Model<3>&, const char* fname = "tensor_permeability");
+void vtu(const std::map<std::string, UpscaledTensor> &, const Model<3> &,
+         const char *fname = "tensor_permeability");
+void vtu(const std::vector<std::string> &, const Model<3> &,
+         const char *fname = "tensor_permeability");
 
 } // !tperm
 } // !csmp

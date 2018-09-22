@@ -6,15 +6,14 @@
 #include <memory>
 
 namespace csmp {
-template <size_t>
-class Model;
+template <size_t> class Model;
 
 namespace tperm {
-    class Settings;
-    class OmegaGenerator;
+class Settings;
+class OmegaGenerator;
 
-    /// Returns sampling regions generator
-    std::unique_ptr<OmegaGenerator> make_omega_generator(const Settings&);
+/// Returns sampling regions generator
+std::unique_ptr<OmegaGenerator> make_omega_generator(const Settings &);
 
 } // !tperm
 } // !csmp

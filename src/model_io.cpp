@@ -10,173 +10,170 @@ using namespace std;
 namespace csmp {
 namespace tperm {
 
-    bool write_vfile(const char* vfname, const csmp::PropertyDatabase<3>& pdb)
-    {
-        ofstream vfile(vfname);
-        if (!vfile.is_open())
-            return false;
-        vfile << pdb;
-        vfile.close();
-        return true;
-    }
+bool write_vfile(const char *vfname, const csmp::PropertyDatabase<3> &pdb) {
+  ofstream vfile(vfname);
+  if (!vfile.is_open())
+    return false;
+  vfile << pdb;
+  vfile.close();
+  return true;
+}
 
-    /**
-		Appends csmp customary `-regions.txt` to `fnamepref`.
-		*/
-    bool write_rfile(const char* fnamepref, const vector<string>& rnames)
-    {
-        auto fname = (string)fnamepref + "-regions.txt";
-        ofstream rfile(fname);
-        if (!rfile.is_open())
-            return false;
-        rfile << "regions file\nno properties\n";
-        for (const auto& rn : rnames)
-            rfile << rn << endl;
-        rfile.close();
-        return true;
-    }
+/**
+Appends csmp customary `-regions.txt` to `fnamepref`.
+*/
+bool write_rfile(const char *fnamepref, const vector<string> &rnames) {
+  auto fname = (string)fnamepref + "-regions.txt";
+  ofstream rfile(fname);
+  if (!rfile.is_open())
+    return false;
+  rfile << "regions file\nno properties\n";
+  for (const auto &rn : rnames)
+    rfile << rn << endl;
+  rfile.close();
+  return true;
+}
 
-    /// Removes line element regions for 3D models
-    void cleanup(csmp::Model<3>& m)
-    {
-        if (containsVolumeElements(m.Region("Model")))
-            for (auto it = m.UniqueRegionsBegin(); it != m.UniqueRegionsEnd(); ++it)
-                if (containsLineElements(it->second) && it->first != "Model") {
-                    m.RemoveRegion(it->first.c_str(), true);
-                    it = m.UniqueRegionsBegin();
-                }
-        if (containsLineElements(m.Region("Model")))
-            throw runtime_error("Model still contains line elements");
-    }
+/// Removes line element regions for 3D models
+void cleanup(csmp::Model<3> &m) {
+  if (containsVolumeElements(m.Region("Model")))
+    for (auto it = m.UniqueRegionsBegin(); it != m.UniqueRegionsEnd(); ++it)
+      if (containsLineElements(it->second) && it->first != "Model") {
+        m.RemoveRegion(it->first.c_str(), true);
+        it = m.UniqueRegionsBegin();
+      }
+  if (containsLineElements(m.Region("Model")))
+    throw runtime_error("Model still contains line elements");
+}
 
-    /// Removes line element regions for 3D models
-    void make_dfn_boundaries(csmp::Model<3>& m)
-    {
-        vector<string> bregions;
-        // loop over regions
-        for (auto it = m.UniqueRegionsBegin(); it != m.UniqueRegionsEnd(); ++it)
-            if (is_main_boundary_id(it->first)) // identify boundary names
-                bregions.push_back(it->first);
-        // converting
-        for (auto br : bregions)
-            m.InsertBoundary(br.c_str(), IRREGULAR, true, true); // make boundaries
-    }
+/// Removes line element regions for 3D models
+void make_dfn_boundaries(csmp::Model<3> &m) {
+  vector<string> bregions;
+  // loop over regions
+  for (auto it = m.UniqueRegionsBegin(); it != m.UniqueRegionsEnd(); ++it)
+    if (is_main_boundary_id(it->first)) // identify boundary names
+      bregions.push_back(it->first);
+  // converting
+  for (auto br : bregions)
+    m.InsertBoundary(br.c_str(), IRREGULAR, true, true); // make boundaries
+}
 
-    /**
-		## Option I (ANSYS)
+/**
+## Option I (ANSYS)
 
-		Expects `JSON` data in form (for ANSYS generated binary files)
+Expects `JSON` data in form (for ANSYS generated binary files)
 
-			"file name": "csp" 
-			"format": "icem" 
+        "file name": "csp"
+        "format": "icem"
 
-		If a region file `rfile-regions.txt` is to be used, the setting
+If a region file `rfile-regions.txt` is to be used, the setting
 
-			"regions file": "rfile" 
+        "regions file": "rfile"
 
-		has to be present. If not, all Icem families in the `.asc` file will be loaded as csmp::Region.
-		As an additional option, all regions to be included can be provided as a setting, in which case
-		a temporary regions file (`tmp-regions.txt`) will be created to load the model with:
+has to be present. If not, all Icem families in the `.asc` file will
+be loaded as csmp::Region.
+As an additional option, all regions to be included can be provided
+as a setting, in which case
+a temporary regions file (`tmp-regions.txt`) will be created to load
+the model with:
 
-			"regions": ["MATRIX", "FRACTURES", "BOUNDARY1",...]
-		
-		## Option II (CSMP)
+        "regions": ["MATRIX", "FRACTURES", "BOUNDARY1",...]
 
-		For (for CSMP binary model)
-		
-			"file name": "csp" 
-			"format": "csmp binary"
+## Option II (CSMP)
 
-		Removes line element regions if 3D model. Returns nullptr if options not valid. If DFN model (settings entry), boundaries are formed accordingly.
-		
-		@todo Issue warning if DFN and no regions specs
-		*/
-    unique_ptr<csmp::Model<3>> load_model(const Settings& s)
-    {
-        Settings ls(s); // local copy that is mutable
-        unique_ptr<csmp::Model<3>> pMod(nullptr);
-        const bool two_d(false), form_boundaries(true);
-        const auto mfname = ls.json["file name"].get<string>();
-        unique_ptr<csmp::PropertyDatabase<3>> pdb = property_database(two_d);
-        const char* vfname = "tmp-variables.txt";
-        if (!write_vfile(vfname, *pdb))
-            return pMod; // is null at this point
-        const auto option = ls.json["format"].get<string>();
-        if (ls.json.count("regions")) {
-            string temp_rfname = "tmp";
-            ls.json["regions file"] = temp_rfname;
-            write_rfile(temp_rfname.c_str(), ls.json["regions"].get<vector<string>>());
-        }
-        if (option == "icem") // icem (ansys) bin file based
-            if (ls.json.count("regions file"))
-                pMod.reset(new ANSYS_Model3D(mfname.c_str(), ls.json["regions file"].get<string>().c_str(), vfname, true, true, form_boundaries));
-            else
-                pMod.reset(new ANSYS_Model3D(mfname.c_str(), vfname, true, true, false, form_boundaries));
-        else if (option == "csmp binary") //csmp bin file based
-            pMod.reset(new Model<3>(mfname.c_str()));
-        if (pMod) {
-            cleanup(*pMod);
-        }
-        return pMod;
-    }
+For (for CSMP binary model)
 
-    /**
-		These are the minimum required variables to solve the pressure problem dim times
-		and post-process permeability.
-		*/
-    unique_ptr<csmp::PropertyDatabase<3>> property_database(bool two_d)
-    {
-        unique_ptr<csmp::PropertyDatabase<3>> pPdb(new PropertyDatabase<3>());
-        pPdb->Verbose(false);
-        // for the pressure problem
-        pPdb->AddProperty("fluid volume source", "m3 s-1", SCALAR, ELEMENT, -1.0, 1.0);
-        pPdb->AddProperty("fluid pressure", "Pa", SCALAR, NODE, -1.0E-5, 1.0E+9);
-        pPdb->AddProperty("conductivity", "m2 Pa-1 s-1", TENSOR, ELEMENT, 1.0E-25, 1.0); // is m3/Pa.s for fracs
-        // matrix only
-        pPdb->AddProperty("permeability", "m2", TENSOR, ELEMENT, 1.0E-25, 1.0E-8);
-        // fractures only
-        pPdb->AddProperty("hydraulic aperture", "m", TENSOR, ELEMENT, 0., 1.0);
-        pPdb->AddProperty("mechanical aperture", "m", SCALAR, ELEMENT, 0., 1.0);
-        // results
-        const size_t dim = two_d ? 2 : 3;
-        for (size_t i(0); i < dim; ++i) {
-            const string vn = "velocity " + to_string(i);
-            pPdb->AddProperty(vn.c_str(), "m s-1", VECTOR, ELEMENT, -1.0E+2, 1.0E+2);
-            const string pn = "pressure gradient " + to_string(i);
-            pPdb->AddProperty(pn.c_str(), "Pa m-1", VECTOR, ELEMENT, -1.0E+20, 1.0E+20);
-        }
-        return pPdb;
-    }
+        "file name": "csp"
+        "format": "csmp binary"
 
-    bool save_model(const csmp::Model<3>& m, const char* bfname)
-    {
-        m.OutputToDisk(bfname);
-        return true;
-    }
+Removes line element regions if 3D model. Returns nullptr if options
+not valid. If DFN model (settings entry), boundaries are formed accordingly.
 
-    bool has_fractures(const csmp::Model<3>& m)
-    {
-        return true;
-    }
+@todo Issue warning if DFN and no regions specs
+*/
+unique_ptr<csmp::Model<3>> load_model(const Settings &s) {
+  Settings ls(s); // local copy that is mutable
+  unique_ptr<csmp::Model<3>> pMod(nullptr);
+  const bool two_d(false), form_boundaries(true);
+  const auto mfname = ls.json["file name"].get<string>();
+  unique_ptr<csmp::PropertyDatabase<3>> pdb = property_database(two_d);
+  const char *vfname = "tmp-variables.txt";
+  if (!write_vfile(vfname, *pdb))
+    return pMod; // is null at this point
+  const auto option = ls.json["format"].get<string>();
+  if (ls.json.count("regions")) {
+    string temp_rfname = "tmp";
+    ls.json["regions file"] = temp_rfname;
+    write_rfile(temp_rfname.c_str(), ls.json["regions"].get<vector<string>>());
+  }
+  if (option == "icem") // icem (ansys) bin file based
+    if (ls.json.count("regions file"))
+      pMod.reset(new ANSYS_Model3D(
+          mfname.c_str(), ls.json["regions file"].get<string>().c_str(), vfname,
+          true, true, form_boundaries));
+    else
+      pMod.reset(new ANSYS_Model3D(mfname.c_str(), vfname, true, true, false,
+                                   form_boundaries));
+  else if (option == "csmp binary") // csmp bin file based
+    pMod.reset(new Model<3>(mfname.c_str()));
+  if (pMod) {
+    cleanup(*pMod);
+  }
+  return pMod;
+}
 
-    bool is_two_D(const csmp::Model<3>& m)
-    {
-        return !(m.ContainsBoundary("FRONT") || m.ContainsBoundary("BOUNDARY5"));
-    }
+/**
+These are the minimum required variables to solve the pressure
+problem dim times
+and post-process permeability.
+*/
+unique_ptr<csmp::PropertyDatabase<3>> property_database(bool two_d) {
+  unique_ptr<csmp::PropertyDatabase<3>> pPdb(new PropertyDatabase<3>());
+  pPdb->Verbose(false);
+  // for the pressure problem
+  pPdb->AddProperty("fluid volume source", "m3 s-1", SCALAR, ELEMENT, -1.0,
+                    1.0);
+  pPdb->AddProperty("fluid pressure", "Pa", SCALAR, NODE, -1.0E-5, 1.0E+9);
+  pPdb->AddProperty("conductivity", "m2 Pa-1 s-1", TENSOR, ELEMENT, 1.0E-25,
+                    1.0); // is m3/Pa.s for fracs
+  // matrix only
+  pPdb->AddProperty("permeability", "m2", TENSOR, ELEMENT, 1.0E-25, 1.0E-8);
+  // fractures only
+  pPdb->AddProperty("hydraulic aperture", "m", TENSOR, ELEMENT, 0., 1.0);
+  pPdb->AddProperty("mechanical aperture", "m", SCALAR, ELEMENT, 0., 1.0);
+  // results
+  const size_t dim = two_d ? 2 : 3;
+  for (size_t i(0); i < dim; ++i) {
+    const string vn = "velocity " + to_string(i);
+    pPdb->AddProperty(vn.c_str(), "m s-1", VECTOR, ELEMENT, -1.0E+2, 1.0E+2);
+    const string pn = "pressure gradient " + to_string(i);
+    pPdb->AddProperty(pn.c_str(), "Pa m-1", VECTOR, ELEMENT, -1.0E+20, 1.0E+20);
+  }
+  return pPdb;
+}
 
-    bool is_dfn(const csmp::Model<3>& m)
-    {
-        if (is_two_D(m))
-            return !containsSurfaceElements(m.Region("Model"));
-        return !containsVolumeElements(m.Region("Model"));
-    }
+bool save_model(const csmp::Model<3> &m, const char *bfname) {
+  m.OutputToDisk(bfname);
+  return true;
+}
 
-    size_t dimensionality(const csmp::Model<3>& m)
-    {
-        if (is_two_D(m))
-            return 2;
-        return 3;
-    }
+bool has_fractures(const csmp::Model<3> &m) { return true; }
+
+bool is_two_D(const csmp::Model<3> &m) {
+  return !(m.ContainsBoundary("FRONT") || m.ContainsBoundary("BOUNDARY5"));
+}
+
+bool is_dfn(const csmp::Model<3> &m) {
+  if (is_two_D(m))
+    return !containsSurfaceElements(m.Region("Model"));
+  return !containsVolumeElements(m.Region("Model"));
+}
+
+size_t dimensionality(const csmp::Model<3> &m) {
+  if (is_two_D(m))
+    return 2;
+  return 3;
+}
 
 } // !tperm
 } // !csmp

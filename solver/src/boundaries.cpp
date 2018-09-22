@@ -3,22 +3,13 @@
 namespace csmp {
 namespace tperm {
 
-    Boundary::Boundary()
-        : nodes_()
-    {
-    }
+Boundary::Boundary() : nodes_() {}
 
-    /// Initializes three empty Boundary pairs
-    Boundaries::Boundaries()
-        : boundaries_(3)
-    {
-    }
+/// Initializes three empty Boundary pairs
+Boundaries::Boundaries() : boundaries_(3) {}
 
-    /// Initializes d empty Boundary pairs
-    Boundaries::Boundaries(size_t d)
-        : boundaries_(d)
-    {
-    }
+/// Initializes d empty Boundary pairs
+Boundaries::Boundaries(size_t d) : boundaries_(d) {}
 
 } // !tperm
 } // !csmp
