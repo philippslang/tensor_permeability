@@ -1,44 +1,44 @@
 #ifndef TP_UNIFFRACCONFIG_H
 #define TP_UNIFFRACCONFIG_H
 
-#include "configurator.h"
 #include "TensorVariable.h"
+#include "configurator.h"
 #include <vector>
 
 namespace csmp {
-	template<size_t> class Element;
+template <size_t>
+class Element;
 
-	namespace tperm {
+namespace tperm {
 
-		/// Configures uniform fractures
-		class UniformFractureConfigurator : public Configurator
-		{
-		public:
-			UniformFractureConfigurator() = delete;
-			/// Allowing for full tensor to be specified
-			UniformFractureConfigurator(const csmp::TensorVariable<3>& ah, 
-										const csmp::TensorVariable<3>& k,
-										const csmp::TensorVariable<3>& c,
-										double am);
-			/// Spherical tensor, i.e. isotropic transmissivity
-			UniformFractureConfigurator(double ah, double am);
+    /// Configures uniform fractures
+    class UniformFractureConfigurator : public Configurator {
+    public:
+        UniformFractureConfigurator() = delete;
+        /// Allowing for full tensor to be specified
+        UniformFractureConfigurator(const csmp::TensorVariable<3>& ah,
+            const csmp::TensorVariable<3>& k,
+            const csmp::TensorVariable<3>& c,
+            double am);
+        /// Spherical tensor, i.e. isotropic transmissivity
+        UniformFractureConfigurator(double ah, double am);
 
-			virtual bool configure(Model&) const override;
+        virtual bool configure(Model&) const override;
 
-		protected:			
-			void input_am(Model&, const std::vector<Element<3>*>&, double) const;
-			void project_ah(Model&, const std::vector<Element<3>*>&, const csmp::TensorVariable<3>&) const;
-			void direct_ah(Model&m, const std::vector<Element<3>*>&,
-						   const csmp::TensorVariable<3>& ah, 
-						   const csmp::TensorVariable<3>& k, 
-						   const csmp::TensorVariable<3>& c) const;
+    protected:
+        void input_am(Model&, const std::vector<Element<3>*>&, double) const;
+        void project_ah(Model&, const std::vector<Element<3>*>&, const csmp::TensorVariable<3>&) const;
+        void direct_ah(Model& m, const std::vector<Element<3>*>&,
+            const csmp::TensorVariable<3>& ah,
+            const csmp::TensorVariable<3>& k,
+            const csmp::TensorVariable<3>& c) const;
 
-			const bool project_; ///< Hydraulic aperture is isotropic (only ah_xx and ah_yy set) and needs projection
-			const double am_;
-			const csmp::TensorVariable<3> ah_, k_, c_;
-		};
+        const bool project_; ///< Hydraulic aperture is isotropic (only ah_xx and ah_yy set) and needs projection
+        const double am_;
+        const csmp::TensorVariable<3> ah_, k_, c_;
+    };
 
-		/** \class UniformFractureConfigurator
+    /** \class UniformFractureConfigurator
 
 		Configures (3D model) equidimensional elements to a uniform `hydraulic aperture` and `mechanical aperture` and corresponding
 		`conductivity` (m3/Pa.s) and `permeability` (m2) Depending on the chosen ctor, either a provided tensor will be assigned to all,
@@ -53,7 +53,7 @@ namespace csmp {
 			permeability	pe	m2	3	1e-25	1e-08	ELEMENT
 		*/
 
-	} // !tperm
+} // !tperm
 } // !csmp
 
 #endif // !TP_UNIFFRACCONFIG_H

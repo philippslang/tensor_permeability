@@ -1,16 +1,15 @@
 #include "configurator.h"
 
 namespace csmp {
-	namespace tperm {
+namespace tperm {
 
-		Configurator::Configurator()
-		{
-		}
+    Configurator::Configurator()
+    {
+    }
 
-		Configurator::~Configurator()
-		{
-		}
+    Configurator::~Configurator()
+    {
+    }
 
-
-	} // !tperm
+} // !tperm
 } // ! csmp

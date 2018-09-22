@@ -3,37 +3,34 @@
 
 #include "omega_generator.h"
 
-
 namespace csmp {
 
+namespace tperm {
 
-	namespace tperm {
+    /// ABC for omega generators
+    class OmegaBDistanceGenerator : public OmegaGenerator {
+    public:
+        /// All elements
+        OmegaBDistanceGenerator();
+        /// Minimum distance
+        explicit OmegaBDistanceGenerator(double);
+        virtual ~OmegaBDistanceGenerator();
 
-		/// ABC for omega generators
-		class OmegaBDistanceGenerator : public OmegaGenerator
-		{
-		public:
-			/// All elements
-			OmegaBDistanceGenerator();
-			/// Minimum distance
-			explicit OmegaBDistanceGenerator(double);
-			virtual ~OmegaBDistanceGenerator();
+        virtual OmegaPtrColl generate(const csmp::Model<3>&) const override;
 
-			virtual OmegaPtrColl generate(const csmp::Model<3>&) const override;
+    private:
+        /// Assumes box shape
+        double sampling_box_total_volume(const csmp::Model<3>&) const;
 
-		private:
-			/// Assumes box shape
-			double sampling_box_total_volume(const csmp::Model<3>&) const;
+        const double dist_;
+    };
 
-			const double dist_;
-		};
-
-		/** \class OmegaBDistanceGenerator
+    /** \class OmegaBDistanceGenerator
 
 		Generates a single Omega using a boundary minumum distance critertion.
 		*/
 
-	} // !tperm
+} // !tperm
 } // !csmp
 
 #endif // !TP_OMEGA_BD_GENERATOR_H

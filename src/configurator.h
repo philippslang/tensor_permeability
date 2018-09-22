@@ -1,32 +1,30 @@
 #ifndef TP_CONFIG_H
 #define TP_CONFIG_H
 
-
 namespace csmp {
-	// forwards
-	template<size_t> class Model;
+// forwards
+template <size_t>
+class Model;
 
+namespace tperm {
 
-	namespace tperm {
+    /// ABC for model configuration, changes the state of a csmp::Model
+    class Configurator {
+    public:
+        typedef csmp::Model<3> Model;
 
-		/// ABC for model configuration, changes the state of a csmp::Model
-		class Configurator 
-		{
-		public:
-			typedef csmp::Model<3> Model;
+        Configurator();
+        virtual ~Configurator();
 
-			Configurator();
-			virtual ~Configurator();
+        virtual bool configure(Model&) const = 0;
+    };
 
-			virtual bool configure(Model&) const = 0;
-		};
-
-		/** \class Configurator
+    /** \class Configurator
 
 		Configurators should check correctness of settings in ctor and throw. The configure method, 
 		ideally, should not throw due to incorrect settings.
 		*/
-	} // !tperm
+} // !tperm
 } // !csmp
 
 #endif // !TP_CONFIG_H

@@ -5,20 +5,18 @@
 
 namespace csmp {
 
-	namespace tperm {
+namespace tperm {
 
-		/// Makes matrix configurators from settings
-		class MatrixConfiguratorFactory : public ConfiguratorFactory
-		{
-		public:
-			MatrixConfiguratorFactory();
-			virtual ~MatrixConfiguratorFactory();
+    /// Makes matrix configurators from settings
+    class MatrixConfiguratorFactory : public ConfiguratorFactory {
+    public:
+        MatrixConfiguratorFactory();
+        virtual ~MatrixConfiguratorFactory();
 
-			virtual std::unique_ptr<Configurator> configurator(const Settings&) const override;
-		};
+        virtual std::unique_ptr<Configurator> configurator(const Settings&) const override;
+    };
 
-
-		/** \class MatrixConfiguratorFactory
+    /** \class MatrixConfiguratorFactory
 
 		Creates Configurator for the model matrix, i.e. all equi-dim elements.
 
@@ -59,7 +57,7 @@ namespace csmp {
 		@todo If no matrix present, no settings should be required
 		*/
 
-	} // !tperm
+} // !tperm
 } // !csmp
 
 #endif // !TP_MATRIXCONFIGFACT_H

@@ -1,28 +1,24 @@
 #include "boundaries.h"
 
 namespace csmp {
-	namespace tperm{
+namespace tperm {
 
+    Boundary::Boundary()
+        : nodes_()
+    {
+    }
 
-		Boundary::Boundary()
-			: nodes_()
-		{
-		}
+    /// Initializes three empty Boundary pairs
+    Boundaries::Boundaries()
+        : boundaries_(3)
+    {
+    }
 
+    /// Initializes d empty Boundary pairs
+    Boundaries::Boundaries(size_t d)
+        : boundaries_(d)
+    {
+    }
 
-		/// Initializes three empty Boundary pairs
-		Boundaries::Boundaries()
-			: boundaries_(3)
-		{
-		}
-
-
-		/// Initializes d empty Boundary pairs
-		Boundaries::Boundaries(size_t d)
-			: boundaries_(d)
-		{
-		}
-
-
-	} // !tperm
+} // !tperm
 } // !csmp

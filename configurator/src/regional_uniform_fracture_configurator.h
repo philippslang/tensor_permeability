@@ -3,38 +3,37 @@
 
 #include "uniform_fracture_configurator.h"
 
-
 namespace csmp {
-	template<size_t> class Element;
+template <size_t>
+class Element;
 
-	namespace tperm {
+namespace tperm {
 
-		/// Configures uniform fractures, on a by region basis
-		class RegionalUniformFractureConfigurator : public UniformFractureConfigurator
-		{
-		public:
-			RegionalUniformFractureConfigurator() = delete;
-			/// Allowing for full tensor to be specified
-			RegionalUniformFractureConfigurator(const std::vector<csmp::TensorVariable<3>>& ahs,
-												const std::vector<csmp::TensorVariable<3>>& ks, 
-												const std::vector<csmp::TensorVariable<3>>& cs,
-												const std::vector<double>& ams,
-												const std::vector<std::string>& rnames);
-			/// Spherical tensor, i.e. isotropic transmissivity
-			RegionalUniformFractureConfigurator(const std::vector<double>& ahs,
-												const std::vector<double>& ams,
-												const std::vector<std::string>& rnames);
+    /// Configures uniform fractures, on a by region basis
+    class RegionalUniformFractureConfigurator : public UniformFractureConfigurator {
+    public:
+        RegionalUniformFractureConfigurator() = delete;
+        /// Allowing for full tensor to be specified
+        RegionalUniformFractureConfigurator(const std::vector<csmp::TensorVariable<3>>& ahs,
+            const std::vector<csmp::TensorVariable<3>>& ks,
+            const std::vector<csmp::TensorVariable<3>>& cs,
+            const std::vector<double>& ams,
+            const std::vector<std::string>& rnames);
+        /// Spherical tensor, i.e. isotropic transmissivity
+        RegionalUniformFractureConfigurator(const std::vector<double>& ahs,
+            const std::vector<double>& ams,
+            const std::vector<std::string>& rnames);
 
-			virtual bool configure(Model&) const override;
+        virtual bool configure(Model&) const override;
 
-		private:
-			void check_vsize() const;			
-			const std::vector<double> ams_;
-			const std::vector<std::string> frnames_;
-			std::vector<csmp::TensorVariable<3>> ahs_, ks_, cs_;
-		};
+    private:
+        void check_vsize() const;
+        const std::vector<double> ams_;
+        const std::vector<std::string> frnames_;
+        std::vector<csmp::TensorVariable<3>> ahs_, ks_, cs_;
+    };
 
-		/** \class RegionalUniformFractureConfigurator
+    /** \class RegionalUniformFractureConfigurator
 
 		Configures (3D model) equidimensional elements to a uniform `hydraulic aperture` and `mechanical aperture` and corresponding
 		`conductivity` (m3/Pa.s) and `permeability` (m2) Depending on the chosen ctor, either a provided tensor will be assigned to all,
@@ -53,7 +52,7 @@ namespace csmp {
 			permeability	pe	m2	3	1e-25	1e-08	ELEMENT
 		*/
 
-	} // !tperm
+} // !tperm
 } // !csmp
 
 #endif // !TP_REGUNIFFRACCONFIG_H

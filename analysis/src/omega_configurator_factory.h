@@ -5,20 +5,18 @@
 
 namespace csmp {
 
-	namespace tperm {
+namespace tperm {
 
-		/// Makes sampling region configurators from settings
-		class OmegaConfiguratorFactory : public ConfiguratorFactory
-		{
-		public:
-			OmegaConfiguratorFactory();
-			virtual ~OmegaConfiguratorFactory();
+    /// Makes sampling region configurators from settings
+    class OmegaConfiguratorFactory : public ConfiguratorFactory {
+    public:
+        OmegaConfiguratorFactory();
+        virtual ~OmegaConfiguratorFactory();
 
-			virtual std::unique_ptr<Configurator> configurator(const Settings&) const override;
-		};
+        virtual std::unique_ptr<Configurator> configurator(const Settings&) const override;
+    };
 
-
-		/** \class OmegaConfiguratorFactory
+    /** \class OmegaConfiguratorFactory
 
 		@deprecated We don't use omega configurators - look for the equivalent function factory
 
@@ -47,7 +45,7 @@ namespace csmp {
 
 		*/
 
-	} // !tperm
+} // !tperm
 } // !csmp
 
 #endif // !TP_OMEGACONFIGFACT_H

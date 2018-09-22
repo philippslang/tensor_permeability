@@ -5,16 +5,17 @@
 using namespace std;
 
 namespace csmp {
-	namespace tperm {
+namespace tperm {
 
-		DfnOmega::DfnOmega()
-			: Omega(), tv_(0.)
-		{
-		}
+    DfnOmega::DfnOmega()
+        : Omega()
+        , tv_(0.)
+    {
+    }
 
-		DfnOmega::~DfnOmega()
-		{
-		}
+    DfnOmega::~DfnOmega()
+    {
+    }
 
-	} // ! tperm
+} // ! tperm
 } // !csmp

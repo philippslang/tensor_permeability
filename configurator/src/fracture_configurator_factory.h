@@ -5,20 +5,18 @@
 
 namespace csmp {
 
-	namespace tperm {
+namespace tperm {
 
-		/// Makes fracture configurators from settings
-		class FractureConfiguratorFactory : public ConfiguratorFactory
-		{
-		public:
-			FractureConfiguratorFactory();
-			virtual ~FractureConfiguratorFactory();
+    /// Makes fracture configurators from settings
+    class FractureConfiguratorFactory : public ConfiguratorFactory {
+    public:
+        FractureConfiguratorFactory();
+        virtual ~FractureConfiguratorFactory();
 
-			virtual std::unique_ptr<Configurator> configurator(const Settings&) const override;
-		};
+        virtual std::unique_ptr<Configurator> configurator(const Settings&) const override;
+    };
 
-
-		/** \class FractureConfiguratorFactory
+    /** \class FractureConfiguratorFactory
 
 		Creates a Configurator for the model fractures, i.e. all lower-dim elements.
 
@@ -109,7 +107,7 @@ namespace csmp {
 		@todo If no fractures present, no settings should be required
 		*/
 
-	} // !tperm
+} // !tperm
 } // !csmp
 
 #endif // !TP_MATRIXCONFIGFACT_H

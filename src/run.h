@@ -2,19 +2,17 @@
 #ifndef TP_RUN_H
 #define TP_RUN_H
 
-
 namespace csmp {
-	namespace tperm {
-		class Settings;
+namespace tperm {
+    class Settings;
 
-		/// Forwards settings from file 
-		void run(const char*);
+    /// Forwards settings from file
+    void run(const char*);
 
-		/// Main control flow method
-		void run(const Settings&);
+    /// Main control flow method
+    void run(const Settings&);
 
-
-	} // !tperm
+} // !tperm
 } // !csmp
 
 #endif // !TP_RUN_H
